@@ -16,13 +16,13 @@
     <p class="text-gray-400 mb-8">김치 프리미엄 및 세력 펌핑 코인 (KRW) 실시간 감시</p>
     
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="glass p-6 rounded-xl">
-            <h2 class="text-xl font-bold text-white mb-4">현재 대장주 (Top Gainer)</h2>
-            <div class="flex justify-between items-center bg-black/50 p-4 rounded-lg">
-                <span class="text-2xl font-bold text-white">ONG-KRW</span>
-                <span class="text-2xl font-black text-red-500">+43.56%</span>
+        <div class="glass p-6 rounded-xl relative overflow-hidden">
+            <h2 class="text-xl font-bold text-white mb-4">현재 상승률 1위 (Top Gainer)</h2>
+            <div id="ticker-box" class="flex justify-between items-center bg-black/50 p-4 rounded-lg border border-transparent transition-all duration-300">
+                <span id="top-gainer-name" class="text-2xl font-bold text-white">데이터 로딩중...</span>
+                <span id="top-gainer-rate" class="text-2xl font-black text-gray-400">---%</span>
             </div>
-            <p class="text-right text-sm text-gray-500 mt-2">거래대금 753억 돌파</p>
+            <p id="top-gainer-vol" class="text-right text-sm text-gray-500 mt-2">거래대금 스캔 중...</p>
         </div>
         
         <div class="glass p-6 rounded-xl border-l-4 border-red-500">
@@ -34,5 +34,90 @@
     </div>
     
     <div class="mt-8 text-center"><a href="https://www.1004mas.com" class="text-[#45a29e] hover:text-white underline">포탈(Portal) 복귀</a></div>
+    
+    <!-- 1004MAS Upbit Real-time Engine -->
+    <script>
+        let krwMarketCodes = [];
+        let krwMarketNames = {};
+        
+        async function initUpbitEngine() {
+            try {
+                // 1. Get all KRW markets
+                const res = await fetch('https://api.upbit.com/v1/market/all');
+                const markets = await res.json();
+                
+                markets.forEach(m => {
+                    if (m.market.startsWith('KRW-')) {
+                        krwMarketCodes.push(m.market);
+                        krwMarketNames[m.market] = m.korean_name; // e.g., '비트코인'
+                    }
+                });
+                
+                // 2. Fetch immediately, then loop every 2 seconds
+                fetchTopGainer();
+                setInterval(fetchTopGainer, 2000);
+            } catch (error) {
+                console.error("Upbit Engine Init Error:", error);
+                document.getElementById('top-gainer-name').innerText = "통신 에러";
+            }
+        }
+
+        let previousRate = 0;
+
+        async function fetchTopGainer() {
+            if (krwMarketCodes.length === 0) return;
+            try {
+                const query = krwMarketCodes.join(',');
+                const res = await fetch('https://api.upbit.com/v1/ticker?markets=' + query);
+                const tickers = await res.json();
+                
+                // Find top gainer
+                let topGainer = tickers[0];
+                for(let t of tickers) {
+                    if(t.signed_change_rate > topGainer.signed_change_rate) {
+                        topGainer = t;
+                    }
+                }
+                
+                // Format Data
+                const marketCode = topGainer.market;
+                const koreanName = krwMarketNames[marketCode];
+                const changeRate = (topGainer.signed_change_rate * 100).toFixed(2);
+                const tradeVolUeok = Math.floor(topGainer.acc_trade_price_24h / 100000000).toLocaleString(); // 억 단위
+                
+                // Check if rate increased or decreased for flash effect
+                const tickerBox = document.getElementById('ticker-box');
+                const rateEl = document.getElementById('top-gainer-rate');
+                
+                if (changeRate > previousRate) {
+                    tickerBox.classList.add('border-red-500', 'bg-red-900/20');
+                    setTimeout(() => tickerBox.classList.remove('border-red-500', 'bg-red-900/20'), 300);
+                } else if (changeRate < previousRate) {
+                    tickerBox.classList.add('border-blue-500', 'bg-blue-900/20');
+                    setTimeout(() => tickerBox.classList.remove('border-blue-500', 'bg-blue-900/20'), 300);
+                }
+                previousRate = changeRate;
+                
+                // Update DOM
+                document.getElementById('top-gainer-name').innerHTML = `${koreanName} <span class="text-sm text-gray-500 ml-2">${marketCode.replace('KRW-','')}</span>`;
+                
+                if (topGainer.signed_change_rate > 0) {
+                    rateEl.innerText = `+${changeRate}%`;
+                    rateEl.className = "text-2xl font-black text-red-500";
+                } else {
+                    rateEl.innerText = `${changeRate}%`;
+                    rateEl.className = "text-2xl font-black text-blue-500";
+                }
+                
+                document.getElementById('top-gainer-vol').innerText = `거래대금 ${tradeVolUeok}억 돌파`;
+                
+            } catch (error) {
+                console.error("Upbit Fetch Error:", error);
+            }
+        }
+        
+        // Start Engine
+        initUpbitEngine();
+    </script>
 </body>
 </html>
