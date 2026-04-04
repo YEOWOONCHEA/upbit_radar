@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>바이비트(Bybit) 전술 레이더</title>
+    <title>업비트(Upbit) 전술 레이더</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -15,39 +15,40 @@
         @keyframes neonPulseLoser { 0% { box-shadow: inset 0 0 0px rgba(239,68,68,0); } 50% { box-shadow: inset 0 0 15px rgba(239,68,68,0.5); border-color: rgba(239,68,68,0.8); } 100% { box-shadow: inset 0 0 0px rgba(239,68,68,0); } }
         .blink-gainer { animation: neonPulseGainer 1.5s infinite; }
         .blink-loser { animation: neonPulseLoser 1.5s infinite; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
     </style>
 </head>
 <body class="p-4 lg:p-8">
-    <h1 class="text-3xl font-extrabold text-[#f59e0b] mb-2"><i class="fas fa-satellite-dish"></i> 1004MAS BYBIT RADAR <span class="text-xs text-gray-500 font-normal ml-2 tracking-widest border border-gray-700 px-2 rounded">v2.0 TACTICAL</span></h1>
+    <h1 class="text-3xl font-extrabold text-[#f59e0b] mb-2"><i class="fas fa-satellite-dish"></i> 1004MAS UPBIT RADAR <span class="text-xs text-gray-500 font-normal ml-2 tracking-widest border border-gray-700 px-2 rounded">v2.0 TACTICAL (KRW)</span></h1>
     <p class="text-gray-400 mb-6 flex justify-between items-center flex-wrap gap-2">
-        <span>글로벌 가상자산 선물 달러 자금 풀 감시망 및 자동 경보 시스템</span>
+        <span>한국 가상자산 현물(KRW) 자금 쏠림 감시 및 투매(낙주) 자동 경보 시스템</span>
     </p>
     
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
-        <!-- 상승 Top 20 레이더 -->
+        <!-- 급등 수급 돌파 레이더 -->
         <div class="lg:col-span-4 glass p-4 rounded-xl relative overflow-hidden shadow-lg shadow-green-900/10 flex flex-col h-[calc(100vh-120px)]">
             <h2 class="text-lg flex justify-between items-center font-bold text-white mb-4 border-b border-gray-800 pb-2">
-                <span><i class="fas fa-rocket text-green-500 mr-2"></i> 롱(Long) 타겟: 자금 쏠림 (Top 20)</span>
-                <span class="text-red-400 font-mono text-xs bg-red-900/40 px-2 py-0.5 rounded border border-red-500/30" title="01:00, 09:00, 17:00 정각 펀딩비 결제 남은 시간">
-                    <i class="fas fa-bomb mr-1 animate-ping"></i> <strong class="fr-countdown-display tracking-widest">--:--:--</strong>
+                <span><i class="fas fa-rocket text-green-500 mr-2"></i> 진성 펌핑: 자금 쏠림 (Top 20)</span>
+                <span class="text-green-400 font-mono text-xs bg-green-900/40 px-2 py-0.5 rounded border border-green-500/30" title="업비트 기준 매일 09:00 KST에 전일 대비 수익률 0% 리셋">
+                    <i class="fas fa-clock mr-1"></i> 오전 9시 기준
                 </span>
             </h2>
             <div id="top-gainers-list" class="space-y-2 overflow-y-auto flex-grow custom-scrollbar">
-                <div class="text-gray-400 text-sm"><i class="fas fa-spinner fa-spin mr-2"></i>바이비트 위성 연결 중...</div>
+                <div class="text-gray-400 text-sm"><i class="fas fa-spinner fa-spin mr-2"></i>업비트 위성 연결 중...</div>
             </div>
         </div>
 
-        <!-- 설거지 숏 레이더 -->
+        <!-- 투매 과대 낙폭 레이더 -->
         <div class="lg:col-span-4 glass p-4 rounded-xl relative overflow-hidden shadow-lg shadow-red-900/10 flex flex-col h-[calc(100vh-120px)]">
             <h2 class="text-lg flex justify-between items-center font-bold text-white mb-4 border-b border-gray-800 pb-2">
-                <span><i class="fas fa-meteor text-red-500 mr-2"></i> 숏(Short) 타겟: 설거지 폭포수 (Drawdown 20)</span>
-                <span class="text-red-400 font-mono text-xs bg-red-900/40 px-2 py-0.5 rounded border border-red-500/30" title="01:00, 09:00, 17:00 정각 펀딩비 결제 남은 시간">
-                    <i class="fas fa-bomb mr-1 animate-ping"></i> <strong class="fr-countdown-display tracking-widest">--:--:--</strong>
-                </span>
+                <span><i class="fas fa-arrow-down text-red-500 mr-2"></i> 기술적 반등 타겟: 투매 과대낙폭 (Drawdown 20)</span>
             </h2>
             <div id="top-losers-list" class="space-y-2 overflow-y-auto flex-grow custom-scrollbar">
-                <div class="text-gray-400 text-sm"><i class="fas fa-spinner fa-spin mr-2"></i>바이비트 위성 연결 중...</div>
+                <div class="text-gray-400 text-sm"><i class="fas fa-spinner fa-spin mr-2"></i>업비트 위성 연결 중...</div>
             </div>
         </div>
         
@@ -55,20 +56,20 @@
         <div class="lg:col-span-4 glass p-4 rounded-xl relative flex flex-col h-[calc(100vh-120px)]">
             <h2 class="text-lg font-bold text-white mb-4 border-b border-gray-800 pb-2 flex justify-between items-center">
                 <div><i class="fas fa-brain text-purple-400 mr-2"></i> 제갈량 통제합동소</div>
-                <div class="flex items-center text-xs text-green-400"><div class="w-2 h-2 bg-green-400 rounded-full animate-ping mr-2"></div> AI 수신</div>
+                <div class="flex items-center text-xs text-green-400"><div class="w-2 h-2 bg-green-400 rounded-full animate-ping mr-2"></div> 현물 오더플로우 수신</div>
             </h2>
             
             <!-- 대장주 지휘부 고정 패널 -->
             <div id="market-leaders-list" class="space-y-2 mb-4 border-b border-gray-800 pb-4"></div>
             
             <div id="ai-verdict-list" class="space-y-3 overflow-y-auto flex-grow custom-scrollbar">
-                <div class="text-gray-400 text-sm"><i class="fas fa-satellite mr-2"></i>오더플로우 분석 대기...</div>
+                <div class="text-gray-400 text-sm"><i class="fas fa-satellite mr-2"></i>오름세 분석 대기...</div>
             </div>
             
             <div class="mt-6 border-t border-gray-800 pt-4 text-[11px] text-gray-500 font-mono">
                 <div class="mb-1"><i class="fas fa-volume-up text-gray-400 mr-1 w-3"></i> 알람: <span id="audio-status" class="text-red-400">비활성화 (권한 필요)</span></div>
                 <div class="mb-1"><i class="fas fa-bolt text-gray-400 mr-1 w-3"></i> Vel : 최근 1분 가격 가속도 (단기 포착용)</div>
-                <div><i class="fas fa-percentage text-gray-400 mr-1 w-3"></i> FR  : 현재 펀딩비 (-는 숏스퀴즈 주의)</div>
+                <div><i class="fas fa-fire text-gray-400 mr-1 w-3"></i> Peak : 당일 고점 대비 방어력 (초강세 및 낙폭 감지)</div>
             </div>
             
             <!-- 텔레그램 연동 셋팅 -->
@@ -92,24 +93,27 @@
     </div>
     
     <script>
+        let krwMarketCodes = [];
+        let krwMarketNames = {};
+
         let previousGainers = new Set();
         let previousLosers = new Set();
         let isFirstLoad = true;
         let audioEnabled = false;
         
-        // 메모리 기반 1분 가속도 트래커 { 'BTCUSDT': [{time, price}, ...] }
+        // 메모리 기반 1분 가속도 트래커 { 'KRW-BTC': [{time, price}, ...] }
         const priceHistory = {};
         
-        // 신규 진입 종목 트래커 (깜빡임 용도) { 'BTCUSDT': timestamp }
+        // 신규 진입 종목 트래커 (깜빡임 용도)
         const newEntryTracker = {};
         
-        // 제갈량 황금 타점 트래커 (깜빡임 및 알람 중복 방지 용도) { 'BTCUSDT': timestamp }
+        // 제갈량 황금 타점 트래커
         const newVerdictTracker = {};
         
         // --- 텔레그램 연동 ---
         function loadTelegramSettings() {
-            const token = localStorage.getItem('tg_bot_token');
-            const chatId = localStorage.getItem('tg_chat_id');
+            const token = localStorage.getItem('tg_bot_token_upbit');
+            const chatId = localStorage.getItem('tg_chat_id_upbit');
             if(token) document.getElementById('tg_bot_token').value = token;
             if(chatId) document.getElementById('tg_chat_id').value = chatId;
         }
@@ -117,19 +121,19 @@
         function saveTelegramSettings() {
             const token = document.getElementById('tg_bot_token').value.trim();
             const chatId = document.getElementById('tg_chat_id').value.trim();
-            localStorage.setItem('tg_bot_token', token);
-            localStorage.setItem('tg_chat_id', chatId);
+            localStorage.setItem('tg_bot_token_upbit', token);
+            localStorage.setItem('tg_chat_id_upbit', chatId);
             if(token && chatId) {
-                sendTelegramMessage("✅ <b>[1004MAS Bybit Radar]</b>\n\n주공, 텔레그램 전령 시스템 연동이 정상적으로 완료되었습니다. 앞으로 급등락 종목을 이곳으로 보고하겠습니다.");
-                alert("텔레그램 설정이 기기(로컬)에 안전하게 저장되었습니다.\n테스트 메시지를 확인해주세요!");
+                sendTelegramMessage("✅ <b>[1004MAS Upbit Radar]</b>\n\n주공, 텔레그램 전령 시스템 연동이 정상적으로 완료되었습니다. 앞으로 급등락 리포트를 이곳으로 보고하겠습니다.");
+                alert("업비트 텔레그램 설정이 기기(로컬)에 저장되었습니다.");
             } else {
                 alert("토큰과 Chat ID를 모두 입력해주세요.");
             }
         }
 
         async function sendTelegramMessage(text) {
-            const token = localStorage.getItem('tg_bot_token');
-            const chatId = localStorage.getItem('tg_chat_id');
+            const token = localStorage.getItem('tg_bot_token_upbit');
+            const chatId = localStorage.getItem('tg_chat_id_upbit');
             if(!token || !chatId) return;
             try {
                 await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
@@ -161,7 +165,6 @@
                 gain.connect(ctx.destination);
                 
                 if(type === 'long') {
-                    // 경쾌한 상승 알람 (따랑~)
                     osc.type = 'sine';
                     osc.frequency.setValueAtTime(800, ctx.currentTime);
                     osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.1);
@@ -169,7 +172,6 @@
                     gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
                     osc.start(); osc.stop(ctx.currentTime + 0.3);
                 } else if(type === 'short') {
-                    // 묵직한 하락 알람 (부웅-)
                     osc.type = 'triangle';
                     osc.frequency.setValueAtTime(200, ctx.currentTime);
                     osc.frequency.linearRampToValueAtTime(100, ctx.currentTime + 0.4);
@@ -177,14 +179,12 @@
                     gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
                     osc.start(); osc.stop(ctx.currentTime + 0.4);
                 } else if(type === 'test') {
-                    // 권한 승인음
                     osc.type = 'square';
                     osc.frequency.setValueAtTime(440, ctx.currentTime);
                     gain.gain.setValueAtTime(0.1, ctx.currentTime);
                     gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
                     osc.start(); osc.stop(ctx.currentTime + 0.1);
                 } else if(type === 'golden_long') {
-                    // 황금 타점(롱): 3연속 경쾌한 긴급 알람
                     [0, 0.2, 0.4].forEach(offset => {
                         const o = ctx.createOscillator();
                         const g = ctx.createGain();
@@ -197,7 +197,6 @@
                         o.start(ctx.currentTime + offset); o.stop(ctx.currentTime + offset + 0.15);
                     });
                 } else if(type === 'golden_short') {
-                    // 황금 타점(숏): 3연속 묵직한 긴급 알람
                     [0, 0.3, 0.6].forEach(offset => {
                         const o = ctx.createOscillator();
                         const g = ctx.createGain();
@@ -210,48 +209,70 @@
                         o.start(ctx.currentTime + offset); o.stop(ctx.currentTime + offset + 0.25);
                     });
                 }
-            } catch(e) { console.log("Audio Error", e); }
+            } catch(e) { }
         }
 
-        function updateVelocity(symbol, currentPrice) {
+        function updateVelocity(market, currentPrice) {
             const now = Date.now();
-            if(!priceHistory[symbol]) priceHistory[symbol] = [];
+            if(!priceHistory[market]) priceHistory[market] = [];
             
-            priceHistory[symbol].push({ time: now, price: parseFloat(currentPrice) });
-            priceHistory[symbol] = priceHistory[symbol].filter(p => now - p.time <= 60000);
+            priceHistory[market].push({ time: now, price: parseFloat(currentPrice) });
+            priceHistory[market] = priceHistory[market].filter(p => now - p.time <= 60000); // 60초 보관
             
-            if(priceHistory[symbol].length > 1) {
-                const oldest = priceHistory[symbol][0];
+            if(priceHistory[market].length > 1) {
+                const oldest = priceHistory[market][0];
                 const velocityPct = ((currentPrice - oldest.price) / oldest.price) * 100;
                 return velocityPct;
             }
             return 0;
         }
 
-        async function fetchBybitData() {
+        async function initUpbitEngine() {
             try {
-                const res = await fetch('https://api.bybit.com/v5/market/tickers?category=linear');
+                const res = await fetch('https://api.upbit.com/v1/market/all');
+                const markets = await res.json();
+                
+                markets.forEach(m => {
+                    if (m.market.startsWith('KRW-')) {
+                        krwMarketCodes.push(m.market);
+                        krwMarketNames[m.market] = m.korean_name;
+                    }
+                });
+                
+                loadTelegramSettings();
+                fetchUpbitData();
+                setInterval(fetchUpbitData, 2000); // 2초 주기
+            } catch (error) {
+                console.error("Upbit Init Error:", error);
+            }
+        }
+
+        async function fetchUpbitData() {
+            if (krwMarketCodes.length === 0) return;
+            try {
+                // 시장 전체 조회 (업비트는 약 12~130개 종목이라 한 번에 조회해도 문제없음)
+                const query = krwMarketCodes.join(',');
+                const res = await fetch('https://api.upbit.com/v1/ticker?markets=' + query);
                 const data = await res.json();
                 
-                let list = data.result.list.filter(t => t.symbol.endsWith('USDT'));
-                
-                list.forEach(t => { 
-                    t.velocity1m = updateVelocity(t.symbol, t.lastPrice); 
-                    // 고점 대비 하락률(Drawdown) 분석 (설거지 포착용)
-                    const high = parseFloat(t.highPrice24h);
-                    const last = parseFloat(t.lastPrice);
+                data.forEach(t => { 
+                    t.velocity1m = updateVelocity(t.market, t.trade_price); 
+                    // 당일 고점 대비 하락률
+                    const high = parseFloat(t.high_price);
+                    const last = parseFloat(t.trade_price);
                     t.drawdown = high > 0 ? ((last - high) / high) * 100 : 0;
                 });
                 
-                const leaders = list.filter(t => t.symbol === 'BTCUSDT' || t.symbol === 'ETHUSDT');
-                leaders.sort((a,b) => a.symbol === 'BTCUSDT' ? -1 : 1);
+                // 대장주 분리
+                const leaders = data.filter(t => t.market === 'KRW-BTC' || t.market === 'KRW-ETH');
+                leaders.sort((a,b) => a.market === 'KRW-BTC' ? -1 : 1);
                 
-                // 롱 타겟: 24시간 등락률 플러스 순 유지
-                const gainersList = [...list].sort((a,b) => parseFloat(b.price24hPcnt) - parseFloat(a.price24hPcnt));
+                // 롱 타겟: 등락률 순 유지
+                const gainersList = [...data].sort((a,b) => b.signed_change_rate - a.signed_change_rate);
                 const top20 = gainersList.slice(0, 20);
                 
-                // 숏 타겟: 고점 대비 하락률(Drawdown)이 가장 심한 순서대로 세팅 (세력의 펌프앤덤프 저격용)
-                const losersList = [...list].sort((a,b) => a.drawdown - b.drawdown);
+                // 숏(투매 낙폭) 타겟: 고점 대비 하락률이 가장 심한 순서
+                const losersList = [...data].sort((a,b) => a.drawdown - b.drawdown);
                 const drawdown20 = losersList.slice(0, 20);
 
                 renderLeaders(leaders);
@@ -262,47 +283,43 @@
                 calculateAIVerdict(top20, drawdown20);
                 
                 isFirstLoad = false;
-            } catch (error) { console.error("Bybit Fetch Error:", error); }
+            } catch (error) { console.error("Upbit Fetch Error:", error); }
         }
-        
+
         function renderLeaders(leaders) {
             const listHTML = leaders.map(t => {
-                const sym = t.symbol.replace('USDT', '');
-                const changeRate = (parseFloat(t.price24hPcnt) * 100).toFixed(2);
-                const turnoverMillions = Math.floor(parseFloat(t.turnover24h) / 1000000).toLocaleString();
-                const fundingRate = parseFloat(t.fundingRate);
-                const fundingRateStr = (fundingRate * 100).toFixed(4);
+                const korName = krwMarketNames[t.market];
+                const engName = t.market.replace('KRW-', '');
+                const changeRate = (t.signed_change_rate * 100).toFixed(2);
+                const turnoverEok = Math.floor(t.acc_trade_price_24h / 100000000).toLocaleString();
                 
-                const frColor = fundingRate < 0 ? 'text-red-400 font-bold' : 'text-gray-500';
                 const vel = t.velocity1m;
                 const velSign = vel > 0 ? '+' : '';
                 const velColor = vel >= 0.2 ? 'text-green-400 font-bold' : (vel <= -0.2 ? 'text-red-400 font-bold' : 'text-gray-500');
                 
-                const isPositive = changeRate >= 0;
-                const colorClass = isPositive ? 'text-green-400' : 'text-red-400';
-                const sign = isPositive ? '+' : '';
+                const colorClass = t.signed_change_rate > 0 ? 'text-red-500' : (t.signed_change_rate < 0 ? 'text-blue-500' : 'text-gray-400');
+                const sign = t.signed_change_rate > 0 ? '+' : '';
                 
                 return `
                     <div class="flex flex-col bg-yellow-900/10 p-2.5 rounded-lg border border-yellow-500/30">
                         <div class="flex justify-between items-center mb-1">
                             <div class="flex items-center gap-2">
                                 <span class="text-yellow-500 text-base w-4"><i class="fas fa-crown"></i></span>
-                                <div class="font-bold text-yellow-500 text-lg tracking-wide">${sym} <span class="text-xs text-gray-500 font-normal ml-1">Market Leader</span></div>
+                                <div class="font-bold text-yellow-500 text-lg tracking-wide">${korName} <span class="text-xs text-gray-500 font-normal ml-1">${engName}</span></div>
                             </div>
                             <div class="text-xl font-black ${colorClass} tracking-tighter">${sign}${changeRate}%</div>
                         </div>
                         <div class="flex justify-between items-center text-base font-bold font-mono pl-7 mt-1.5 tracking-tight">
-                            <div class="text-gray-400">$${turnoverMillions}M</div>
+                            <div class="text-gray-400">${turnoverEok}억원</div>
                             <div class="flex gap-4">
                                 ${t.drawdown >= -3 
                                     ? `<span title="고점 유지력(초강세)"><i class="fas fa-fire text-blue-400 mr-1 text-sm"></i>Peak: <span class="text-blue-400 font-bold">${t.drawdown.toFixed(1)}%</span></span>`
                                     : (t.drawdown >= -10 
                                         ? `<span title="고점 이탈(경고)"><i class="fas fa-exclamation-triangle text-yellow-500 mr-1 text-sm"></i>Peak: <span class="text-yellow-500 font-bold">${t.drawdown.toFixed(1)}%</span></span>`
-                                        : `<span title="고점 폭락(설거지)"><i class="fas fa-meteor text-red-500 mr-1 text-sm"></i>Peak: <span class="text-red-400 font-bold">${t.drawdown.toFixed(1)}%</span></span>`
+                                        : `<span title="고점 폭락(투매)"><i class="fas fa-meteor text-red-500 mr-1 text-sm"></i>Peak: <span class="text-red-400 font-bold">${t.drawdown.toFixed(1)}%</span></span>`
                                       )
                                 }
                                 <span title="1분 단기 가속도">Vel: <span class="${velColor}">${velSign}${vel.toFixed(2)}%</span></span>
-                                <span title="현재 펀딩비(Funding Rate)">FR: <span class="${frColor}">${fundingRateStr}%</span></span>
                             </div>
                         </div>
                     </div>
@@ -313,20 +330,18 @@
 
         function renderList(dataArr, elementId, mode) {
             const listHTML = dataArr.map((t, index) => {
-                const sym = t.symbol.replace('USDT', '');
-                const changeRate = (parseFloat(t.price24hPcnt) * 100).toFixed(2);
-                const turnoverMillions = Math.floor(parseFloat(t.turnover24h) / 1000000).toLocaleString();
-                const fundingRate = parseFloat(t.fundingRate);
-                const fundingRateStr = (fundingRate * 100).toFixed(4);
-                
-                const frColor = fundingRate < 0 ? 'text-red-400 font-bold' : 'text-gray-500';
+                const korName = krwMarketNames[t.market];
+                const engName = t.market.replace('KRW-', '');
+                const changeRate = (t.signed_change_rate * 100).toFixed(2);
+                const turnoverEok = Math.floor(t.acc_trade_price_24h / 100000000).toLocaleString();
                 
                 const vel = t.velocity1m;
                 const velSign = vel > 0 ? '+' : '';
                 const velColor = vel >= 0.2 ? 'text-green-400 font-bold' : (vel <= -0.2 ? 'text-red-400 font-bold' : 'text-gray-500');
                 
-                const colorClass = mode === 'gainer' ? 'text-green-400' : 'text-red-400';
-                const sign = changeRate > 0 ? '+' : '';
+                // 업비트 공식 색상 (빨강=상승, 파랑=하락)
+                const colorClass = t.signed_change_rate > 0 ? 'text-red-500' : (t.signed_change_rate < 0 ? 'text-blue-500' : 'text-gray-400');
+                const sign = t.signed_change_rate > 0 ? '+' : '';
                 const bgClass = mode === 'gainer' ? 'gainer-bg' : 'loser-bg';
                 
                 // 하단 Drawdown 수치 표기 생성 (파랑-노랑-빨강 통합 컬러 스케일 적용)
@@ -337,17 +352,17 @@
                     } else if (t.drawdown >= -10) {
                         drawdownStr = `<span title="고점 이탈(윗꼬리 발생)"><i class="fas fa-exclamation-triangle text-yellow-500 mr-1 text-sm"></i>Peak: <span class="text-yellow-500 font-bold">${t.drawdown.toFixed(1)}%</span></span>`;
                     } else {
-                        drawdownStr = `<span title="고점 폭락(설거지)"><i class="fas fa-meteor text-red-500 mr-1 text-sm"></i>Peak: <span class="text-red-400 font-bold">${t.drawdown.toFixed(1)}%</span></span>`;
+                        drawdownStr = `<span title="투매 과대낙폭(패닉셀)"><i class="fas fa-meteor text-red-500 mr-1 text-sm"></i>Peak: <span class="text-red-400 font-bold">${t.drawdown.toFixed(1)}%</span></span>`;
                     }
                 }
                 
-                // 신규 진입 깜빡임 처리 (60초 유지)
+                // 신규 진입 깜빡임 처리
                 let blinkClass = '';
-                if(newEntryTracker[t.symbol]) {
-                    if(Date.now() - newEntryTracker[t.symbol] < 60000) {
+                if(newEntryTracker[t.market]) {
+                    if(Date.now() - newEntryTracker[t.market] < 60000) {
                         blinkClass = mode === 'gainer' ? 'blink-gainer' : 'blink-loser';
                     } else {
-                        delete newEntryTracker[t.symbol];
+                        delete newEntryTracker[t.market];
                     }
                 }
                 
@@ -356,16 +371,15 @@
                         <div class="flex justify-between items-center mb-1">
                             <div class="flex items-center gap-2">
                                 <span class="text-gray-500 font-mono text-base w-4">${index + 1}</span>
-                                <div class="font-bold text-white text-lg tracking-wide flex items-center">${sym}</div>
+                                <div class="font-bold text-white text-lg tracking-wide flex items-baseline">${korName} <span class="text-xs text-gray-500 ml-2 font-normal">${engName}</span></div>
                             </div>
                             <div class="text-xl font-black ${colorClass} tracking-tighter">${sign}${changeRate}%</div>
                         </div>
                         <div class="flex justify-between items-center text-base font-bold font-mono pl-6 mt-1.5 tracking-tight">
-                            <div class="text-gray-300">$${turnoverMillions}M</div>
+                            <div class="text-gray-300">${turnoverEok}억원</div>
                             <div class="flex gap-4 items-center">
                                 ${drawdownStr}
                                 <span title="1분 단기 가속도">Vel: <span class="${velColor}">${velSign}${vel.toFixed(2)}%</span></span>
-                                <span title="현재 펀딩비(Funding Rate)">FR: <span class="${frColor}">${fundingRateStr}%</span></span>
                             </div>
                         </div>
                     </div>
@@ -376,40 +390,40 @@
 
         function buildAlertMessage(mode, items) {
             if (items.length === 0) return "";
-            const title = mode === 'long' ? "🚀 <b>[롱 타점 포착] 상승 Top 20 진입</b>" : "🩸 <b>[숏 타점 포착] 설거지 폭포수 진입</b>";
+            const title = mode === 'long' ? "🚀 <b>[진성 펌핑 포착] 상승 Top 20 진입</b>" : "📉 <b>[투매 포착] 과대낙폭 하위 20 진입</b>";
             let msg = title + "\n\n";
             items.forEach(t => {
-                const sym = t.symbol.replace('USDT', '');
-                const chg = (parseFloat(t.price24hPcnt) * 100).toFixed(2);
+                const korName = krwMarketNames[t.market];
+                const chg = (t.signed_change_rate * 100).toFixed(2);
                 const vel = t.velocity1m.toFixed(2);
-                msg += `- <b>${sym}</b> : ${chg}% (1분 가속도: ${vel}%)\n`;
+                msg += `- <b>${korName}</b> : ${t.signed_change_rate > 0 ? '+' : ''}${chg}% (가속: ${vel}%)\n`;
             });
             return msg;
         }
 
         function checkAlerts(top20, drawdown20) {
             if(isFirstLoad) {
-                top20.forEach(t => previousGainers.add(t.symbol));
-                drawdown20.forEach(t => previousLosers.add(t.symbol));
+                top20.forEach(t => previousGainers.add(t.market));
+                drawdown20.forEach(t => previousLosers.add(t.market));
                 return;
             }
             
-            const currentGainers = new Set(top20.map(t => t.symbol));
-            const currentLosers = new Set(drawdown20.map(t => t.symbol));
+            const currentGainers = new Set(top20.map(t => t.market));
+            const currentLosers = new Set(drawdown20.map(t => t.market));
             
-            const newlyAddedGainers = top20.filter(t => !previousGainers.has(t.symbol));
-            const newlyAddedLosers = drawdown20.filter(t => !previousLosers.has(t.symbol));
+            const newlyAddedGainers = top20.filter(t => !previousGainers.has(t.market));
+            const newlyAddedLosers = drawdown20.filter(t => !previousLosers.has(t.market));
             
             if(newlyAddedGainers.length > 0) {
                 playSound('long');
                 sendTelegramMessage(buildAlertMessage('long', newlyAddedGainers));
-                newlyAddedGainers.forEach(t => newEntryTracker[t.symbol] = Date.now());
+                newlyAddedGainers.forEach(t => newEntryTracker[t.market] = Date.now());
             }
             
             if(newlyAddedLosers.length > 0) {
                 playSound('short');
                 sendTelegramMessage(buildAlertMessage('short', newlyAddedLosers));
-                newlyAddedLosers.forEach(t => newEntryTracker[t.symbol] = Date.now());
+                newlyAddedLosers.forEach(t => newEntryTracker[t.market] = Date.now());
             }
             
             previousGainers = currentGainers;
@@ -419,150 +433,91 @@
         function calculateAIVerdict(top20, drawdown20) {
             const verdicts = [];
 
-            // 롱 타겟 분석 (상승 Top 20)
+            // 진짜 펌핑장(상승 Top 20) 분석
             top20.forEach(t => {
-                const sym = t.symbol.replace('USDT', '');
-                const turnover = parseFloat(t.turnover24h) / 1000000;
+                const korName = krwMarketNames[t.market];
+                const turnover = t.acc_trade_price_24h / 100000000; // 억원
                 const vel = t.velocity1m;
-                const fr = parseFloat(t.fundingRate) * 100;
-                
-                if (turnover > 30 && vel > 0.3 && fr < 0) {
-                    // 황금 타점 최초 발견 시 (60초 이내 중복 알람/텔레그램 방지)
-                    if (!newVerdictTracker[sym] || Date.now() - newVerdictTracker[sym] > 60000) {
-                        playSound('golden_long');
-                        sendTelegramMessage(`🎯 <b>[제갈량 황금 타점 발견: 롱(LONG)]</b>\n\n- <b>${sym}</b>\n🔥 돈(거래대금 $${Math.floor(turnover)}M) 집중 유입!\n🚀 가속도(+${vel.toFixed(2)}%) 폭발!\n❗️ 펀딩비(${fr.toFixed(4)}%) 역전 발생!\n\n<i>숏스퀴즈(연쇄 청산) 발사 직전의 교과서적 황금 타점입니다. 진입을 고려하십시오.</i>`);
-                        newVerdictTracker[sym] = Date.now();
-                    }
-
-                    verdicts.push({
-                        coin_name: sym,
-                        signal: 'green',
-                        reason: `🔥 <b>돈(거래대금 $${Math.floor(turnover)}M)</b>이 강하게 쏠리며 <b>가속도(+${vel.toFixed(2)}%)</b>가 폭발 중입니다.\n현재 <b>펀딩비가 마이너스(${fr.toFixed(4)}%)</b> 상태로, 숏(Short) 포지션을 잡은 개미들의 연쇄 청산이 일어나는 '황금 롱(Long) 타점(숏스퀴즈)'일 확률이 매우 높습니다.`
-                    });
-                }
-            });
-
-            // 숏 타겟 분석 (고점 대비 폭락 Drawdown 20)
-            drawdown20.forEach(t => {
-                const sym = t.symbol.replace('USDT', '');
-                const turnover = parseFloat(t.turnover24h) / 1000000;
-                const vel = t.velocity1m;
-                const fr = parseFloat(t.fundingRate) * 100;
                 const dd = t.drawdown;
                 
-                // 기존 조건에 '고점에서 15% 이상 피를 흘린 종목' 조건 추가
-                if (turnover > 30 && vel < -0.3 && fr > 0.01 && dd < -15) {
-                    // 황금 타점 최초 발견 시 (60초 이내 중복 알람/텔레그램 방지)
-                    if (!newVerdictTracker[sym] || Date.now() - newVerdictTracker[sym] > 60000) {
-                        playSound('golden_short');
-                        sendTelegramMessage(`🎯 <b>[제갈량 황금 타점 발견: 숏(SHORT) 설거지 포착!]</b>\n\n- <b>${sym}</b>\n💀 고점 대비 폭락(${dd.toFixed(2)}%) 발생!\n🩸 돈(거래대금 $${Math.floor(turnover)}M) 이탈 중!\n📉 하락 가속도(${vel.toFixed(2)}%) 급증!\n❗️ 펀딩비(${fr.toFixed(4)}%) 위험 수준!\n\n<i>세력의 펌프앤덤프 물량이 쏟아지며 롱 포지션 연쇄 청산 폭포수가 터지는 완벽한 숏 타점입니다. 진입하십시오.</i>`);
-                        newVerdictTracker[sym] = Date.now();
+                // 업비트 현물: 거래대금 500억 이상, 가속도 0.5% 이상, 고점 방어력 -1% 이내
+                if (turnover > 500 && vel > 0.5 && dd > -1.5) {
+                    if (!newVerdictTracker[t.market] || Date.now() - newVerdictTracker[t.market] > 60000) {
+                        playSound('golden_long');
+                        sendTelegramMessage(`🎯 <b>[제갈량 황금 타점 발견: 찐상승 포착!]</b>\n\n- <b>${korName}</b>\n🔥 돈(거래대금 ${Math.floor(turnover).toLocaleString()}억) 집중 유입!\n🚀 현물 가속도(+${vel.toFixed(2)}%) 폭발!\n💎 고점 방어력(${dd.toFixed(2)}%) 완벽 유지!\n\n<i>세력이 윗꼬리를 주지 않고 차트를 그대로 밀어올리는 진성 펌핑입니다. 편승을 고려하십시오.</i>`);
+                        newVerdictTracker[t.market] = Date.now();
                     }
 
                     verdicts.push({
-                        coin_name: sym,
-                        signal: 'red',
-                        reason: `💀 <b>고점 대비 폭락(${dd.toFixed(2)}%)</b>하는 전형적인 <b>'설거지(Pump & Dump)'</b> 패턴입니다.\n여기에 돈(거래대금 $${Math.floor(turnover)}M)이 빠져나가며 가속도(${vel.toFixed(2)}%)가 심하게 고꾸라지고 있습니다.\n그럼에도 펀딩비가 플러스(${fr.toFixed(4)}%)이므로 미련을 못 버린 롱(개미) 포지션의 연쇄 청산 폭포수가 터지는 보증된 투매(Short) 타점입니다.`
+                        coin_name: korName,
+                        signal: 'green',
+                        reason: `🔥 <b>돈(거래대금 ${Math.floor(turnover).toLocaleString()}억)</b>이 강하게 쏠리며 <b>가속도(+${vel.toFixed(2)}%)</b>가 폭발 중입니다.\n현재 <b>고점 방어력(${dd.toFixed(2)}%)</b>이 매우 뛰어난 상태로, 윗꼬리 없이 세력이 계속 시세를 펌핑하는 '황금 상승장(돌파)'일 확률이 매우 높습니다.`
                     });
                 }
             });
 
-            // 타점이 완벽하지 않을 때
+            // 과대 낙폭 (Drawdown 20) 기술적 반등 타점 분석
+            drawdown20.forEach(t => {
+                const korName = krwMarketNames[t.market];
+                const turnover = t.acc_trade_price_24h / 100000000;
+                const vel = t.velocity1m;
+                const dd = t.drawdown;
+                
+                // 업비트 현물: 거래대금 300억 이상, 순간 하락가속도 -1.0% 이상, 9시 이후 대비 고점에서 15% 이상 피 흘림
+                if (turnover > 300 && vel < -1.0 && dd < -15) {
+                    if (!newVerdictTracker[t.market] || Date.now() - newVerdictTracker[t.market] > 60000) {
+                        playSound('golden_short');
+                        sendTelegramMessage(`🎯 <b>[제갈량 극공포 타점: 투매 낙주매매 포착!]</b>\n\n- <b>${korName}</b>\n💀 고점 대비 폭락(${dd.toFixed(2)}%) 발생!\n🩸 투매 대금(${Math.floor(turnover).toLocaleString()}억) 터짐!\n📉 하락 가속도(${vel.toFixed(2)}%) 급증!\n\n<i>개미들의 투매 물량이 쏟아지며 극단적 공포 피뢰침이 발생했습니다. 짧고 강한 V자 기술적 반등을 노리는 '낙주 매매' 진입을 준비하십시오.</i>`);
+                        newVerdictTracker[t.market] = Date.now();
+                    }
+
+                    verdicts.push({
+                        coin_name: korName,
+                        signal: 'red',
+                        reason: `💀 <b>고점 대비 폭락(${dd.toFixed(2)}%)</b>하며 개미들의 패닉물량이 던져지는 <b>'투매 극공포 구간'</b>입니다.\n순간적인 하락 가속도(${vel.toFixed(2)}%)가 심하게 고꾸라지고 있습니다.\n현물 시장에서 이런 투매의 끝자락은 대개 <b>빠른 '기술적 반등(V자)'</b>이 나오므로 반등을 노리는 '낙주 매매(바닥 잡기)' 타점으로 유효합니다.`
+                    });
+                }
+            });
+
             if (verdicts.length === 0) {
                 verdicts.push({
-                    coin_name: '제갈량의 3대 황금 비율 대기 중...',
+                    coin_name: '제갈량의 폭발 타점 대기 중...',
                     signal: 'yellow',
-                    reason: '현재 시장에 (1)거래대금 폭발 (2)미친 가속도 (3)펀딩비 결정적 함정이 모두 맞아떨어지는 완벽한 사냥감이 없습니다.\n무리한 추격 매매를 피하고 20위권 순위 변동을 유유자적하게 관망하시옵소서.'
+                    reason: '현재 업비트 현물 시장에 (1)수급 폭발 진성 펌핑이나 (2)과대 낙폭 공포 투매가 포착되지 않았습니다.\n무리한 뇌동매매를 삼가하고 순위 변동을 유유자적하게 관망하시옵소서.'
                 });
             }
 
-            renderDynamicVerdicts(verdicts);
-        }
-
-        function renderDynamicVerdicts(verdicts) {
             const styles = {
                 'red': 'border-red-500/40 bg-red-900/10',
                 'green': 'border-green-500/40 bg-green-900/10',
                 'yellow': 'border-yellow-500/40 bg-yellow-900/10'
             };
+            
             const badges = {
-                'red': '<span class="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-lg shadow-red-500/30 animate-pulse">숏 타겟</span>',
-                'green': '<span class="bg-green-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-lg shadow-green-500/30 animate-pulse">롱 타겟</span>',
-                'yellow': '<span class="bg-yellow-500 text-black text-[10px] font-bold px-1.5 py-0.5 rounded shadow-lg shadow-yellow-500/30">주의 구간</span>'
+                'red': '<span class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded shadow-lg shadow-red-500/30"><i class="fas fa-meteor mr-1"></i> 낙주(기술적반등) 승인</span>',
+                'green': '<span class="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded shadow-lg shadow-green-500/30"><i class="fas fa-rocket mr-1"></i> 상승 돌파 승인</span>',
+                'yellow': '<span class="bg-yellow-500 text-black text-xs font-bold px-2 py-1 rounded shadow-lg shadow-yellow-500/30"><i class="fas fa-eye mr-1"></i> 관망</span>'
             };
             
             const html = verdicts.map(v => {
                 const style = styles[v.signal] || styles['yellow'];
                 const badge = badges[v.signal] || badges['yellow'];
-                
-                // 황금 타점 패널 1분 깜빡임 처리
-                let blinkClass = '';
-                if (v.signal !== 'yellow' && newVerdictTracker[v.coin_name]) {
-                    if (Date.now() - newVerdictTracker[v.coin_name] < 60000) {
-                        blinkClass = v.signal === 'green' ? 'blink-gainer' : 'blink-loser';
-                    }
-                }
-
                 return `
-                    <div class="p-3 rounded-lg border ${style} ${blinkClass} backdrop-blur-sm transition-all hover:scale-[1.02]">
-                        <div class="flex justify-between items-center mb-1.5">
-                            <h3 class="font-extrabold text-white text-sm">${v.coin_name}</h3>
+                    <div class="p-4 rounded-xl border ${style} backdrop-blur-sm relative overflow-hidden transition-all hover:scale-[1.01]">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="font-extrabold text-white text-lg">${v.coin_name}</h3>
                             ${badge}
                         </div>
-                        <p class="text-[11.5px] text-gray-300 leading-relaxed whitespace-pre-line">${v.reason}</p>
+                        <p class="text-sm text-gray-300 leading-relaxed whitespace-pre-line">${v.reason}</p>
                     </div>
                 `;
             }).join('');
+            
             document.getElementById('ai-verdict-list').innerHTML = html;
         }
-        
-        async function initBybitEngine() {
-            loadTelegramSettings();
-            fetchBybitData();
-            setInterval(fetchBybitData, 2000);
-        }
 
-        function updateFundingCountdown() {
-            const now = new Date();
-            const utcH = now.getUTCHours();
-            const utcM = now.getUTCMinutes();
-            const utcS = now.getUTCSeconds();
-            
-            // 바이비트 공식 펀딩비 정산: 한국시간 1시, 9시, 17시 (UTC기준 0, 8, 16시)
-            let nextUtcH = 0;
-            if (utcH < 8) nextUtcH = 8;
-            else if (utcH < 16) nextUtcH = 16;
-            else nextUtcH = 24;
-
-            const currentSeconds = utcH * 3600 + utcM * 60 + utcS;
-            const targetSeconds = nextUtcH * 3600;
-            let diff = targetSeconds - currentSeconds;
-            
-            const h = Math.floor(diff / 3600);
-            diff %= 3600;
-            const m = Math.floor(diff / 60);
-            const s = diff % 60;
-            
-            const timeStr = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-            const counterElements = document.querySelectorAll('.fr-countdown-display');
-            counterElements.forEach(el => {
-                el.innerText = timeStr;
-                // 남은 시간이 10분 내외일 경우 긴급 효과 (옵션)
-                if (diff < 600) {
-                    el.parentElement.classList.replace('text-red-400', 'text-white');
-                    el.parentElement.classList.replace('bg-red-900/40', 'bg-red-600');
-                    el.parentElement.classList.add('animate-pulse');
-                } else {
-                    el.parentElement.classList.replace('text-white', 'text-red-400');
-                    el.parentElement.classList.replace('bg-red-600', 'bg-red-900/40');
-                    el.parentElement.classList.remove('animate-pulse');
-                }
-            });
-        }
-        setInterval(updateFundingCountdown, 1000);
-        updateFundingCountdown();
-
-        initBybitEngine();
+        // Start Upbit Engine
+        initUpbitEngine();
     </script>
 </body>
 </html>
