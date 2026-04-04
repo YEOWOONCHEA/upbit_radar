@@ -13,30 +13,32 @@
 </head>
 <body class="p-8">
     <h1 class="text-3xl font-extrabold text-[#66fcf1] mb-2"><i class="fab fa-bitcoin"></i> 1004MAS UPBIT RADAR</h1>
-    <p class="text-gray-400 mb-8">김치 프리미엄 및 세력 펌핑 코인 (KRW) 실시간 감시</p>
+    <p class="text-gray-400 mb-8">한국 시장 폭주 코인 파악 및 제갈량 AI 분석 대시보드</p>
     
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="glass p-6 rounded-xl relative overflow-hidden">
-            <h2 class="text-xl font-bold text-white mb-4">현재 상승률 1위 (Top Gainer)</h2>
-            <div id="ticker-box" class="flex justify-between items-center bg-black/50 p-4 rounded-lg border border-transparent transition-all duration-300">
-                <span id="top-gainer-name" class="text-2xl font-bold text-white">데이터 로딩중...</span>
-                <span id="top-gainer-rate" class="text-2xl font-black text-gray-400">---%</span>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- 실시간 Top 5 레이더 -->
+        <div class="lg:col-span-5 glass p-6 rounded-xl">
+            <h2 class="text-xl font-bold text-white mb-4"><i class="fas fa-satellite-dish text-blue-400 animate-pulse mr-2"></i> 실시간 상승폭주 (Top 5)</h2>
+            <div id="top-gainers-list" class="space-y-3">
+                <div class="text-gray-400 text-sm">업비트 통신망과 연결 중...</div>
             </div>
-            <p id="top-gainer-vol" class="text-right text-sm text-gray-500 mt-2">거래대금 스캔 중...</p>
         </div>
         
-        <div class="glass p-6 rounded-xl border-l-4 border-red-500 relative">
-            <h2 class="text-lg font-bold text-white mb-2 flex items-center justify-between">
-                <div><i class="fas fa-brain"></i> 제갈량 판결 (Verdicts)</div>
-                <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse" title="라이브 수신 중"></div>
+        <!-- 제갈량 판결 리스트 -->
+        <div class="lg:col-span-7 glass p-6 rounded-xl relative">
+            <h2 class="text-xl font-bold text-white mb-4 flex justify-between items-center">
+                <div><i class="fas fa-brain text-purple-400 mr-2"></i> 제갈량 전술 통제합동소</div>
+                <div class="flex items-center text-xs text-green-400"><div class="w-2 h-2 bg-green-400 rounded-full animate-ping mr-2"></div> AI 위성 수신 중</div>
             </h2>
-            <p id="ai-verdict-text" class="text-gray-300 text-sm leading-relaxed whitespace-pre-line">
-                AI 데이터를 수신 중입니다...
-            </p>
+            <div id="ai-verdict-list" class="space-y-4">
+                <div class="text-gray-400 text-sm">로컬 파이썬 봇의 시그널을 대기 중입니다...</div>
+            </div>
         </div>
     </div>
     
-    <div class="mt-8 text-center"><a href="https://www.1004mas.com" class="text-[#45a29e] hover:text-white underline">포탈(Portal) 복귀</a></div>
+    <div class="mt-8 text-center text-sm">
+        <a href="https://www.1004mas.com" class="text-[#45a29e] hover:text-white underline"><i class="fas fa-door-open mr-1"></i> 중앙 포탈로 복귀</a>
+    </div>
     
     <!-- 1004MAS Upbit Real-time Engine -->
     <script>
@@ -45,95 +47,124 @@
         
         async function initUpbitEngine() {
             try {
-                // 1. Get all KRW markets
                 const res = await fetch('https://api.upbit.com/v1/market/all');
                 const markets = await res.json();
                 
                 markets.forEach(m => {
                     if (m.market.startsWith('KRW-')) {
                         krwMarketCodes.push(m.market);
-                        krwMarketNames[m.market] = m.korean_name; // e.g., '비트코인'
+                        krwMarketNames[m.market] = m.korean_name;
                     }
                 });
                 
-                // 2. Fetch immediately, then loop every 2 seconds
-                fetchTopGainer();
-                setInterval(fetchTopGainer, 2000);
+                fetchTopGainers();
+                setInterval(fetchTopGainers, 2000); // 2초마다 갱신
                 
-                // 3. Start AI Verdict Engine (fetch every 60 seconds)
                 fetchAIVerdict();
-                setInterval(fetchAIVerdict, 60000);
+                setInterval(fetchAIVerdict, 60000); // 1분마다 AI 데이터 갱신
             } catch (error) {
                 console.error("Upbit Engine Init Error:", error);
-                document.getElementById('top-gainer-name').innerText = "통신 에러";
             }
         }
 
-        async function fetchAIVerdict() {
-            try {
-                // Fetch public JSONBin without API Key
-                const res = await fetch('https://api.jsonbin.io/v3/b/69d06b37aaba882197c2124a?meta=false');
-                const data = await res.json();
-                if(data.verdict) {
-                    document.getElementById('ai-verdict-text').innerText = data.verdict;
-                }
-            } catch(e) {
-                console.error("Verdict Fetch Error:", e);
-            }
-        }
-
-        let previousRate = 0;
-
-        async function fetchTopGainer() {
+        async function fetchTopGainers() {
             if (krwMarketCodes.length === 0) return;
             try {
                 const query = krwMarketCodes.join(',');
                 const res = await fetch('https://api.upbit.com/v1/ticker?markets=' + query);
                 const tickers = await res.json();
                 
-                // Find top gainer
-                let topGainer = tickers[0];
-                for(let t of tickers) {
-                    if(t.signed_change_rate > topGainer.signed_change_rate) {
-                        topGainer = t;
-                    }
-                }
+                // 등락률 순 내림차순 정렬 후 Top 5 추출
+                tickers.sort((a,b) => b.signed_change_rate - a.signed_change_rate);
+                const top5 = tickers.slice(0, 5);
                 
-                // Format Data
-                const marketCode = topGainer.market;
-                const koreanName = krwMarketNames[marketCode];
-                const changeRate = (topGainer.signed_change_rate * 100).toFixed(2);
-                const tradeVolUeok = Math.floor(topGainer.acc_trade_price_24h / 100000000).toLocaleString(); // 억 단위
+                const listHTML = top5.map((t, index) => {
+                    const marketCode = t.market;
+                    const koreanName = krwMarketNames[marketCode];
+                    const changeRate = (t.signed_change_rate * 100).toFixed(2);
+                    const tradeVolUeok = Math.floor(t.acc_trade_price_24h / 100000000).toLocaleString();
+                    
+                    const colorClass = t.signed_change_rate > 0 ? 'text-red-500' : 'text-blue-500';
+                    const sign = t.signed_change_rate > 0 ? '+' : '';
+                    
+                    return `
+                        <div class="flex justify-between items-center bg-black/40 p-3 rounded-lg border border-gray-800 hover:border-gray-600 transition-colors">
+                            <div class="flex items-center gap-3">
+                                <span class="text-gray-600 font-black text-lg w-4">${index + 1}</span>
+                                <div>
+                                    <div class="font-bold text-white">${koreanName} <span class="text-xs text-gray-500 ml-1 font-normal">${marketCode.replace('KRW-','')}</span></div>
+                                    <div class="text-xs text-gray-400 mt-0.5">거래대금 ${tradeVolUeok}억</div>
+                                </div>
+                            </div>
+                            <div class="text-xl font-black ${colorClass}">${sign}${changeRate}%</div>
+                        </div>
+                    `;
+                }).join('');
                 
-                // Check if rate increased or decreased for flash effect
-                const tickerBox = document.getElementById('ticker-box');
-                const rateEl = document.getElementById('top-gainer-rate');
-                
-                if (changeRate > previousRate) {
-                    tickerBox.classList.add('border-red-500', 'bg-red-900/20');
-                    setTimeout(() => tickerBox.classList.remove('border-red-500', 'bg-red-900/20'), 300);
-                } else if (changeRate < previousRate) {
-                    tickerBox.classList.add('border-blue-500', 'bg-blue-900/20');
-                    setTimeout(() => tickerBox.classList.remove('border-blue-500', 'bg-blue-900/20'), 300);
-                }
-                previousRate = changeRate;
-                
-                // Update DOM
-                document.getElementById('top-gainer-name').innerHTML = `${koreanName} <span class="text-sm text-gray-500 ml-2">${marketCode.replace('KRW-','')}</span>`;
-                
-                if (topGainer.signed_change_rate > 0) {
-                    rateEl.innerText = `+${changeRate}%`;
-                    rateEl.className = "text-2xl font-black text-red-500";
-                } else {
-                    rateEl.innerText = `${changeRate}%`;
-                    rateEl.className = "text-2xl font-black text-blue-500";
-                }
-                
-                document.getElementById('top-gainer-vol').innerText = `거래대금 ${tradeVolUeok}억 돌파`;
-                
+                document.getElementById('top-gainers-list').innerHTML = listHTML;
             } catch (error) {
                 console.error("Upbit Fetch Error:", error);
             }
+        }
+        
+        let aiVerdictsCache = [];
+
+        async function fetchAIVerdict() {
+            try {
+                const res = await fetch('https://api.jsonbin.io/v3/b/69d06b37aaba882197c2124a?meta=false');
+                const data = await res.json();
+                
+                // 만약 데이터가 배열(리스트) 형태라면 렌더링
+                if(Array.isArray(data)) {
+                    aiVerdictsCache = data;
+                    renderVerdicts();
+                } else if (data.verdict) {
+                    // 구버전(테스트용 1개 버전) 하위 호환
+                    aiVerdictsCache = [{
+                        "coin_name": "연동 테스트 완료",
+                        "signal": "green",
+                        "reason": data.verdict,
+                        "timestamp": "방금 전"
+                    }];
+                    renderVerdicts();
+                }
+            } catch(e) {
+                console.error("Verdict Fetch Error:", e);
+            }
+        }
+
+        function renderVerdicts() {
+            if(aiVerdictsCache.length === 0) return;
+            
+            const styles = {
+                'red': 'border-red-500/40 bg-red-900/10',
+                'green': 'border-green-500/40 bg-green-900/10',
+                'yellow': 'border-yellow-500/40 bg-yellow-900/10'
+            };
+            
+            const badges = {
+                'red': '<span class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded shadow-lg shadow-red-500/30"><i class="fas fa-ban mr-1"></i> 관망(펌핑)</span>',
+                'green': '<span class="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded shadow-lg shadow-green-500/30"><i class="fas fa-rocket mr-1"></i> 매수 승인</span>',
+                'yellow': '<span class="bg-yellow-500 text-black text-xs font-bold px-2 py-1 rounded shadow-lg shadow-yellow-500/30"><i class="fas fa-bolt mr-1"></i> 단타 주의</span>'
+            };
+            
+            const html = aiVerdictsCache.map(v => {
+                const style = styles[v.signal] || styles['yellow'];
+                const badge = badges[v.signal] || badges['yellow'];
+                
+                return `
+                    <div class="p-4 rounded-xl border ${style} backdrop-blur-sm relative overflow-hidden transition-all hover:scale-[1.01]">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="font-extrabold text-white text-lg">${v.coin_name}</h3>
+                            ${badge}
+                        </div>
+                        <p class="text-sm text-gray-300 leading-relaxed whitespace-pre-line">${v.reason}</p>
+                        <div class="text-right text-xs mt-3 text-gray-500"><i class="far fa-clock"></i> ${v.timestamp} (AI 1차 판독)</div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('ai-verdict-list').innerHTML = html;
         }
         
         // Start Engine
