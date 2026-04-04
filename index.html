@@ -95,6 +95,7 @@
     <script>
         let krwMarketCodes = [];
         let krwMarketNames = {};
+        let bybitListedCoins = new Set();
 
         let previousGainers = new Set();
         let previousLosers = new Set();
@@ -229,6 +230,15 @@
 
         async function initUpbitEngine() {
             try {
+                // 바이비트 선물 상장 리스트 먼저 획득 (크로스 체킹 용도)
+                try {
+                    const byRes = await fetch('https://api.bybit.com/v5/market/tickers?category=linear');
+                    const byData = await byRes.json();
+                    byData.result.list.forEach(t => {
+                        bybitListedCoins.add(t.symbol.replace('USDT', ''));
+                    });
+                } catch(e) { console.error("Bybit Sync Error:", e); }
+
                 const res = await fetch('https://api.upbit.com/v1/market/all');
                 const markets = await res.json();
                 
@@ -305,7 +315,7 @@
                         <div class="flex justify-between items-center mb-1">
                             <div class="flex items-center gap-2">
                                 <span class="text-yellow-500 text-base w-4"><i class="fas fa-crown"></i></span>
-                                <div class="font-bold text-yellow-500 text-lg tracking-wide">${korName} <span class="text-xs text-gray-500 font-normal ml-1">${engName}</span></div>
+                                <div class="font-bold text-yellow-500 text-lg tracking-wide flex items-center">${korName} <span class="text-xs text-gray-500 font-normal ml-1">${engName}</span>${bybitListedCoins.has(engName) ? ' <span class="ml-2 bg-blue-900/40 text-blue-300 text-[10px] font-mono px-1 rounded border border-blue-500/30" title="바이비트 무기한 선물에도 상장된 종목 (세력의 숏 공격 또는 숏스퀴즈 가능성 있음)">Bybit</span>' : ''}</div>
                             </div>
                             <div class="text-xl font-black ${colorClass} tracking-tighter">${sign}${changeRate}%</div>
                         </div>
@@ -371,7 +381,7 @@
                         <div class="flex justify-between items-center mb-1">
                             <div class="flex items-center gap-2">
                                 <span class="text-gray-500 font-mono text-base w-4">${index + 1}</span>
-                                <div class="font-bold text-white text-lg tracking-wide flex items-baseline">${korName} <span class="text-xs text-gray-500 ml-2 font-normal">${engName}</span></div>
+                                <div class="font-bold text-white text-lg tracking-wide flex items-center">${korName} <span class="text-xs text-gray-500 ml-2 font-normal">${engName}</span>${bybitListedCoins.has(engName) ? ' <span class="ml-2 bg-blue-900/40 text-blue-300 text-[10px] font-mono px-1.5 py-0.5 rounded border border-blue-500/30" title="바이비트 무기한 선물 상장(숏/숏스퀴즈 가능)">Bybit</span>' : ''}</div>
                             </div>
                             <div class="text-xl font-black ${colorClass} tracking-tighter">${sign}${changeRate}%</div>
                         </div>
