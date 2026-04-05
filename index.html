@@ -32,89 +32,117 @@
     </style>
 </head>
 <body class="p-4 lg:p-8">
-    <div class="flex justify-between items-start mb-6 w-full">
+        <div class="flex justify-between items-start mb-6 w-full relative z-10">
         <div>
-            <h1 class="text-3xl font-extrabold text-blue-500 mb-2 drop-shadow-md"><i class="fas fa-satellite-dish"></i> 1004MAS UPBIT RADAR <span class="text-xs text-blue-300 font-normal ml-2 tracking-widest border border-blue-800 bg-blue-900/30 px-2 rounded">v2.0 TACTICAL (KRW)</span></h1>
-            <p class="text-gray-400">
+            <div class="flex items-center gap-4">
+                <h1 class="text-3xl font-extrabold text-blue-500 mb-2 drop-shadow-md"><i class="fas fa-satellite-dish"></i> 1004MAS UPBIT RADAR <span class="text-[14px] text-blue-300 font-normal ml-2 tracking-widest border border-blue-800 bg-blue-900/30 px-2 rounded">v3.0 TACTICAL (KRW)</span></h1>
+                
+                <!-- 김치 프리미엄 전광판 (신설) -->
+                <div class="ml-4 flex items-center bg-gray-900/80 border border-gray-700 hover:border-gray-500 transition-colors rounded-lg px-4 py-1.5 shadow-lg shadow-black/50 mb-2 cursor-help" title="실시간 업비트 BTC(KRW) 와 바이비트 BTC(USDT)의 가격 및 원달러 환율 기반 김치 프리미엄">
+                    <span class="text-[12px] font-bold text-gray-400 mr-2">BTC 김치 프리미엄:</span>
+                    <span id="kimchi-premium-badge" class="text-[16px] font-mono font-black text-gray-300 tracking-wider">계산 중...</span>
+                </div>
+            </div>
+            <p class="text-gray-400 font-bold tracking-wide">
                 <span>한국 가상자산 현물(KRW) 자금 쏠림 감시 및 투매(낙주) 자동 경보 시스템</span>
             </p>
         </div>
-        <div id="live-clock" class="text-2xl font-mono font-black text-blue-400 bg-black/60 px-5 py-2 rounded-xl border border-blue-900/50 shadow-[0_0_15px_rgba(59,130,246,0.2)] flex items-center tracking-wider">
-            --:--:--
+        
+        <div class="flex items-center gap-4">
+            <!-- 사운드 및 셋팅 버튼 (축소) -->
+            <button onclick="enableAudio()" id="btn-audio" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-[14px] text-gray-400 hover:text-white border border-gray-600 transition-colors tooltip" title="사운드 알람 권한 승인">
+                <i class="fas fa-volume-mute" id="audio-icon"></i>
+            </button>
+            <button onclick="document.getElementById('settings-modal').classList.remove('hidden')" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-[14px] text-gray-400 hover:text-white border border-gray-600 transition-colors tooltip" title="텔레그램 환경설정">
+                <i class="fas fa-cog"></i> 설 정
+            </button>
+            
+            <div id="live-clock" class="text-2xl font-mono font-black text-blue-400 bg-black/60 px-5 py-2 rounded-xl border border-blue-900/50 shadow-[0_0_15px_rgba(59,130,246,0.2)] flex items-center tracking-wider">
+                --:--:--
+            </div>
         </div>
     </div>
     
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
-        <!-- 급등 수급 돌파 레이더 -->
-        <div class="lg:col-span-4 glass p-4 rounded-xl relative overflow-hidden shadow-lg shadow-green-900/10 flex flex-col h-[calc(100vh-120px)]">
-            <h2 class="text-lg flex justify-between items-center font-bold text-white mb-4 border-b border-gray-800 pb-2">
-                <span><i class="fas fa-rocket text-green-500 mr-2"></i> 진성 펌핑: 자금 쏠림 (Top 20)</span>
-                <span class="text-green-400 font-mono text-xs bg-green-900/40 px-2 py-0.5 rounded border border-green-500/30" title="업비트 기준 매일 09:00 KST에 전일 대비 수익률 0% 리셋 (경주마 펌핑 시간)">
-                    <i class="fas fa-flag-checkered mr-1 animate-ping"></i> 리셋 펌핑 <strong class="upbit-reset-countdown tracking-widest ml-1">--:--:--</strong>
-                </span>
-            </h2>
-            <div id="top-gainers-list" class="space-y-2 overflow-y-auto flex-grow custom-scrollbar">
-                <div class="text-gray-400 text-sm"><i class="fas fa-spinner fa-spin mr-2"></i>업비트 위성 연결 중...</div>
+        <!-- 1열로 이동한 아침 9시 경주마 및 기존 Top 20 통합 -->
+        <div class="lg:col-span-4 flex flex-col gap-6 h-[calc(100vh-120px)] overflow-hidden">
+            <!-- 아침 9시 경주마 생존 추적소 -->
+            <div class="glass p-4 rounded-xl relative shadow-lg shadow-amber-900/10 shrink-0">
+                <h2 class="text-lg font-bold text-white mb-3 border-b border-gray-800 pb-2 flex justify-between items-center">
+                    <div><i class="fas fa-horse-head text-amber-500 mr-2"></i> 09:00 경주마 생존 추적</div>
+                    <div class="text-[10px] text-gray-400 font-mono">TOP 5 (09:00~09:30)</div>
+                </h2>
+                <div id="morning-whales-list" class="space-y-2 max-h-[220px] overflow-y-auto custom-scrollbar">
+                    <div class="text-gray-400 text-sm py-2 text-center"><i class="fas fa-spinner fa-spin mr-2"></i> 아침 9시 30분봉 데이터 수집 중...</div>
+                </div>
+            </div>
+
+            <!-- 급등 수급 돌파 레이더 (기존 1열 요소) -->
+            <div class="glass p-4 rounded-xl relative overflow-hidden shadow-lg shadow-green-900/10 flex flex-col flex-grow">
+                <h2 class="text-lg flex justify-between items-center font-bold text-white mb-4 border-b border-gray-800 pb-2">
+                    <span><i class="fas fa-rocket text-green-500 mr-2"></i> 자금 쏠림 (Top 10) <span class="bg-gray-800 text-gray-300 text-[10px] px-1.5 py-0.5 rounded border border-gray-700 ml-1">50억↑</span></span>
+                    <span class="text-green-400 font-mono text-[14px] bg-green-900/40 px-2 py-0.5 rounded border border-green-500/30">
+                        <i class="fas fa-flag-checkered mr-1 animate-ping"></i> 리셋 펌핑 <strong class="upbit-reset-countdown tracking-widest ml-1">--:--:--</strong>
+                    </span>
+                </h2>
+                <div id="top-gainers-list" class="space-y-2 overflow-y-auto flex-grow custom-scrollbar"></div>
             </div>
         </div>
 
-        <!-- 투매 과대 낙폭 레이더 -->
+        <!-- 2열: 투매 과대 낙폭 레이더 -->
         <div class="lg:col-span-4 glass p-4 rounded-xl relative overflow-hidden shadow-lg shadow-red-900/10 flex flex-col h-[calc(100vh-120px)]">
             <h2 class="text-lg flex justify-between items-center font-bold text-white mb-4 border-b border-gray-800 pb-2">
-                <span><i class="fas fa-arrow-down text-red-500 mr-2"></i> 기술적 반등 타겟: 투매 과대낙폭 (Drawdown 20)</span>
-                <span class="text-red-400 font-mono text-xs bg-red-900/40 px-2 py-0.5 rounded border border-red-500/30" title="업비트 기준 매일 09:00 KST에 전일 대비 수익률 0% 리셋 (경주마 펌핑 시간)">
+                <span><i class="fas fa-arrow-down text-red-500 mr-2"></i> 기술적 반등 타겟 (Drawdown 10) <span class="bg-gray-800 text-gray-300 text-[10px] px-1.5 py-0.5 rounded border border-gray-700 ml-1">50억↑</span></span>
+                <span class="text-red-400 font-mono text-[14px] bg-red-900/40 px-2 py-0.5 rounded border border-red-500/30">
                     <i class="fas fa-flag-checkered mr-1 animate-ping"></i> 리셋 펌핑 <strong class="upbit-reset-countdown tracking-widest ml-1">--:--:--</strong>
                 </span>
             </h2>
-            <div id="top-losers-list" class="space-y-2 overflow-y-auto flex-grow custom-scrollbar">
-                <div class="text-gray-400 text-sm"><i class="fas fa-spinner fa-spin mr-2"></i>업비트 위성 연결 중...</div>
-            </div>
+            <div id="top-losers-list" class="space-y-2 overflow-y-auto flex-grow custom-scrollbar"></div>
         </div>
         
-        <!-- 제갈량 판결 리스트 -->
-        <div class="lg:col-span-4 glass p-4 rounded-xl relative flex flex-col h-[calc(100vh-120px)]">
-            <h2 class="text-lg font-bold text-white mb-4 border-b border-gray-800 pb-2 flex justify-between items-center">
-                <div><i class="fas fa-brain text-purple-400 mr-2"></i> 제갈량 통제합동소</div>
-                <div class="flex items-center text-xs text-green-400"><div class="w-2 h-2 bg-green-400 rounded-full animate-ping mr-2"></div> 현물 오더플로우 수신</div>
+        <!-- 3열: 제갈량 통제합동소 (확장됨) -->
+        <div class="lg:col-span-4 glass p-4 rounded-xl relative flex flex-col h-[calc(100vh-120px)] border border-purple-500/20 shadow-[0_0_20px_rgba(168,85,247,0.1)]">
+            <h2 class="text-lg font-bold text-white mb-4 border-b border-gray-800 pb-2 flex justify-between items-center text-purple-300">
+                <div><i class="fas fa-brain text-purple-400 mr-2"></i> AI 제갈량 오더플로우 판독 지휘소</div>
+                <div class="flex items-center text-[10px] text-green-400"><div class="w-2 h-2 bg-green-400 rounded-full animate-ping mr-2"></div> 현물 시그널 수신</div>
             </h2>
             
             <!-- 대장주 지휘부 고정 패널 -->
             <div id="market-leaders-list" class="space-y-2 mb-4 border-b border-gray-800 pb-4"></div>
             
-            <!-- 글로벌 숏 저격 레이더 (바이비트 동시상장) -->
-            <div class="mb-4 border-b border-gray-800 pb-4">
-                <div class="text-[11px] text-blue-400 font-bold mb-2 flex items-center"><i class="fas fa-crosshairs mr-1"></i> 바이비트 숏 저격망 (동시상장 종목)</div>
-                <div id="short-sniper-list" class="space-y-2"></div>
-            </div>
-            
             <div id="ai-verdict-list" class="space-y-3 overflow-y-auto flex-grow custom-scrollbar">
-                <div class="text-gray-400 text-sm"><i class="fas fa-satellite mr-2"></i>오름세 분석 대기...</div>
-            </div>
-            
-            <div class="mt-6 border-t border-gray-800 pt-4 text-[11px] text-gray-500 font-mono">
-                <div class="mb-1"><i class="fas fa-volume-up text-gray-400 mr-1 w-3"></i> 알람: <span id="audio-status" class="text-red-400">비활성화 (권한 필요)</span></div>
-                <div class="mb-1"><i class="fas fa-bolt text-gray-400 mr-1 w-3"></i> Vel : 최근 1분 가격 가속도 (단기 포착용)</div>
-                <div><i class="fas fa-fire text-gray-400 mr-1 w-3"></i> Peak : 당일 고점 대비 방어력 (초강세 및 낙폭 감지)</div>
-            </div>
-            
-            <!-- 텔레그램 연동 셋팅 -->
-            <div class="mt-4 p-3 bg-black/30 border border-gray-800 rounded-lg">
-                <div class="text-[11px] text-gray-300 mb-2 font-bold"><i class="fab fa-telegram text-blue-400"></i> Telegram 봇 연동 (로컬 저장소 캐싱)</div>
-                <div class="space-y-2">
-                    <input type="password" id="tg_bot_token" placeholder="Bot Token (ex: 1234:ABC...)" class="w-full bg-gray-900 border border-gray-700 rounded p-1 text-[10px] text-white focus:outline-none focus:border-blue-500">
-                    <input type="text" id="tg_chat_id" placeholder="Chat ID (ex: 1234567890)" class="w-full bg-gray-900 border border-gray-700 rounded p-1 text-[10px] text-white focus:outline-none focus:border-blue-500">
-                    <button onclick="saveTelegramSettings()" class="w-full bg-blue-600/20 hover:bg-blue-600/40 border border-blue-500/50 text-blue-300 rounded p-1.5 text-[10px] transition-colors"><i class="fas fa-save mr-1"></i> 설정 저장 및 테스트 발송</button>
-                </div>
-            </div>
-
-            <div class="mt-4 text-center">
-                <button onclick="enableAudio()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-xs text-white border border-gray-600 transition-colors w-full"><i class="fas fa-play mr-1"></i> 알람 시스템 가동 (사운드 권한 승인)</button>
+                <div class="text-gray-400 text-sm py-4 text-center border border-gray-800 rounded bg-black/20"><i class="fas fa-satellite mr-2 animate-pulse"></i> 코인 오름세/투매세 감식 대기 중...</div>
             </div>
         </div>
     </div>
     
-    <div class="mt-8 text-center text-sm pb-8">
+    <!-- 환경 설정 모달 -->
+    <div id="settings-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex justify-center items-center">
+        <div class="bg-gray-900 border border-gray-700 rounded-xl p-6 w-full max-w-md shadow-[0_0_30px_rgba(0,0,0,0.8)] relative">
+            <button onclick="document.getElementById('settings-modal').classList.add('hidden')" class="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+            <h3 class="text-xl font-black text-white mb-6 border-b border-gray-800 pb-3"><i class="fas fa-cog mr-2 text-gray-400"></i> 환경 설정</h3>
+            
+            <div class="mb-4 space-y-3">
+                <div class="text-[14px] text-gray-300 font-bold mb-2"><i class="fab fa-telegram text-blue-400 text-lg mr-1"></i> Telegram 봇 연동 (알람 발송)</div>
+                <input type="password" id="tg_bot_token" placeholder="Bot Token (ex: 1234:ABC...)" class="w-full bg-black border border-gray-700 rounded p-3 text-[14px] text-white focus:outline-none focus:border-blue-500 transition-colors">
+                <input type="text" id="tg_chat_id" placeholder="Chat ID (ex: 1234567890)" class="w-full bg-black border border-gray-700 rounded p-3 text-[14px] text-white focus:outline-none focus:border-blue-500 transition-colors">
+                <button onclick="saveTelegramSettings()" class="w-full bg-blue-600/30 hover:bg-blue-600/70 border border-blue-500/50 text-blue-200 mt-2 rounded p-3 text-[15px] transition-colors font-bold shadow-lg"><i class="fas fa-save mr-1"></i> 설정 저장 및 테스트 발송</button>
+            </div>
+            
+            <div class="mt-8 border-t border-gray-800 pt-6">
+                <h4 class="text-gray-400 font-bold mb-3 text-sm">지표 설명</h4>
+                <div class="text-[13px] text-gray-500 font-mono space-y-2">
+                    <div class="flex items-start"><i class="fas fa-bolt text-yellow-500 mr-2 mt-1"></i> <div><strong class="text-gray-300">Vel</strong> : 최근 1분 가격 가속도<br><span class="text-[11px]">(순간적인 펌핑/덤핑 포착)</span></div></div>
+                    <div class="flex items-start"><i class="fas fa-fire text-red-500 mr-2 mt-1"></i> <div><strong class="text-gray-300">Peak</strong> : 당일 고점 대비 방어력<br><span class="text-[11px]">(음수가 클수록 윗꼬리 길게 달고 설거지 중)</span></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-8 text-center text-sm pb-8 relative z-10">
         <a href="https://www.1004mas.com" class="text-yellow-500 hover:text-white transition-colors underline"><i class="fas fa-door-open mr-1"></i> 중앙 포탈로 복귀</a>
     </div>
     
@@ -129,6 +157,7 @@
         let previousLosers = new Set();
         let isFirstLoad = true;
         let audioEnabled = false;
+        let morningWhales = [];
         
         // 메모리 기반 1분 가속도 트래커 { 'KRW-BTC': [{time, price}, ...] }
         const priceHistory = {};
@@ -280,11 +309,50 @@
                     }
                 });
                 
+                // 아침 09:00 경주마 비동기 수집 실행
+                fetchMorningWhales();
+                
                 loadTelegramSettings();
                 fetchUpbitData();
                 setInterval(fetchUpbitData, 2000); // 2초 주기
             } catch (error) {
                 console.error("Upbit Init Error:", error);
+            }
+        }
+        
+        async function fetchMorningWhales() {
+            try {
+                const now = new Date();
+                const today = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+                const targetTime = `${today}T09:30:00+09:00`;
+                const targetMatchTime = `${today}T09:00:00`;
+                
+                let volData = [];
+                const delay = ms => new Promise(res => setTimeout(res, ms));
+                
+                for(let i=0; i<krwMarketCodes.length; i++) {
+                    const market = krwMarketCodes[i];
+                    try {
+                        const res = await fetch(`https://api.upbit.com/v1/candles/minutes/30?market=${market}&to=${encodeURIComponent(targetTime)}&count=1`);
+                        const [candle] = await res.json();
+                        if(candle && candle.candle_date_time_kst === targetMatchTime) {
+                            volData.push({
+                                market: market,
+                                name: krwMarketNames[market],
+                                volume: candle.candle_acc_trade_price,
+                                high_price: candle.high_price
+                            });
+                        }
+                    } catch(e) {}
+                    await delay(110);
+                }
+                
+                volData.sort((a,b) => b.volume - a.volume);
+                morningWhales = volData.slice(0, 5);
+                
+            } catch(e) {
+                console.error("Morning Whale Fetch Error:", e);
+                document.getElementById('morning-whales-list').innerHTML = `<div class="text-red-400 text-sm py-2 text-center">데이터 수집 로딩 실패</div>`;
             }
         }
 
@@ -308,19 +376,23 @@
                 const leaders = data.filter(t => t.market === 'KRW-BTC' || t.market === 'KRW-ETH');
                 leaders.sort((a,b) => a.market === 'KRW-BTC' ? -1 : 1);
                 
+                // [필터링] 거래대금 50억 원 이상 타겟
+                const validData = data.filter(t => t.acc_trade_price_24h >= 5000000000);
+                
                 // 롱 타겟: 등락률 순 유지
-                const gainersList = [...data].sort((a,b) => b.signed_change_rate - a.signed_change_rate);
-                const top20 = gainersList.slice(0, 20);
+                const gainersList = [...validData].sort((a,b) => b.signed_change_rate - a.signed_change_rate);
+                const top20 = gainersList.slice(0, 10);
                 
                 // 숏(투매 낙폭) 타겟: 고점 대비 하락률이 가장 심한 순서
-                const losersList = [...data].sort((a,b) => a.drawdown - b.drawdown);
-                const drawdown20 = losersList.slice(0, 20);
+                const losersList = [...validData].sort((a,b) => a.drawdown - b.drawdown);
+                const drawdown20 = losersList.slice(0, 10);
 
                 renderLeaders(leaders);
                 renderList(top20, 'top-gainers-list', 'gainer');
                 renderList(drawdown20, 'top-losers-list', 'loser');
                 
                 renderShortSniper(top20, drawdown20);
+                renderMorningWhales(data);
                 
                 checkAlerts(top20, drawdown20);
                 calculateAIVerdict(top20, drawdown20);
@@ -348,15 +420,15 @@
                         <div class="flex justify-between items-center mb-1">
                             <div class="flex items-center gap-2">
                                 <span class="text-yellow-500 text-base w-4"><i class="fas fa-crown"></i></span>
-                                <div class="font-bold text-yellow-500 text-lg tracking-wide flex items-center">${korName} <span class="text-xs text-gray-500 font-normal ml-1">${engName}</span></div>
+                                <div class="font-bold text-yellow-500 text-lg tracking-wide flex items-center">${korName} <span class="text-[14px] text-gray-500 font-normal ml-1">${engName}</span></div>
                             </div>
                             <div class="text-xl font-black ${colorClass} tracking-tighter">${sign}${changeRate}%</div>
                         </div>
                         <div class="flex justify-between items-center text-base font-bold font-mono pl-7 mt-1.5 tracking-tight">
                             <div class="text-gray-400">${turnoverEok}억원</div>
                             <div class="flex gap-4 items-center">
-                                ${bybitListedCoins.has(engName) ? '<span class="text-blue-400 bg-blue-900/30 px-1.5 py-0.5 rounded border border-blue-500/30 text-[10px] font-bold" title="바이비트 선물 상장 여부">Bybit</span>' : ''}
-                                ${bybitFundingTimes[engName] ? `<span class="text-red-400/80 text-[10px] font-mono flex items-center bg-red-950/40 px-1.5 py-0.5 rounded-sm border border-red-500/20" title="해당 종목의 펀딩비 결제 남은 시간"><i class="fas fa-bomb mr-1 animate-pulse"></i><span class="indiv-funding-timer" data-next-funding="${bybitFundingTimes[engName]}">--:--:--</span></span>` : ''}
+                                ${bybitListedCoins.has(engName) ? '<span class="text-blue-400 bg-blue-900/30 px-1.5 py-0.5 rounded border border-blue-500/30 text-[14px] font-bold" title="바이비트 선물 상장 여부">Bybit</span>' : ''}
+                                ${bybitFundingTimes[engName] ? `<span class="text-red-400/80 text-[14px] font-mono flex items-center bg-red-950/40 px-1.5 py-0.5 rounded-sm border border-red-500/20" title="해당 종목의 펀딩비 결제 남은 시간"><i class="fas fa-bomb mr-1 animate-pulse"></i><span class="indiv-funding-timer" data-next-funding="${bybitFundingTimes[engName]}">--:--:--</span></span>` : ''}
                                 ${t.drawdown >= -3 
                                     ? `<span title="고점 유지력(초강세)"><i class="fas fa-fire text-blue-400 mr-1 text-sm"></i>Peak: <span class="text-blue-400 font-bold">${t.drawdown.toFixed(1)}%</span></span>`
                                     : (t.drawdown >= -10 
@@ -416,15 +488,15 @@
                         <div class="flex justify-between items-center mb-1">
                             <div class="flex items-center gap-2">
                                 <span class="text-gray-500 font-mono text-base w-4">${index + 1}</span>
-                                <div class="font-bold text-white text-lg tracking-wide flex items-center">${korName} <span class="text-xs text-gray-500 ml-2 font-normal">${engName}</span></div>
+                                <div class="font-bold text-white text-lg tracking-wide flex items-center">${korName} <span class="text-[14px] text-gray-500 ml-2 font-normal">${engName}</span></div>
                             </div>
                             <div class="text-xl font-black ${colorClass} tracking-tighter">${sign}${changeRate}%</div>
                         </div>
                         <div class="flex justify-between items-center text-base font-bold font-mono pl-6 mt-1.5 tracking-tight">
                             <div class="text-gray-300">${turnoverEok}억원</div>
                             <div class="flex gap-4 items-center">
-                                ${bybitListedCoins.has(engName) ? '<span class="text-blue-400 bg-blue-900/30 px-1.5 py-0.5 rounded border border-blue-500/30 text-[10px] font-bold" title="바이비트 선물 상장 여부">Bybit</span>' : ''}
-                                ${bybitFundingTimes[engName] ? `<span class="text-red-400/80 text-[10px] font-mono flex items-center bg-red-950/40 px-1.5 py-0.5 rounded-sm border border-red-500/20" title="해당 종목의 펀딩비 결제 남은 시간"><i class="fas fa-bomb mr-1 animate-pulse"></i><span class="indiv-funding-timer" data-next-funding="${bybitFundingTimes[engName]}">--:--:--</span></span>` : ''}
+                                ${bybitListedCoins.has(engName) ? '<span class="text-blue-400 bg-blue-900/30 px-1.5 py-0.5 rounded border border-blue-500/30 text-[14px] font-bold" title="바이비트 선물 상장 여부">Bybit</span>' : ''}
+                                ${bybitFundingTimes[engName] ? `<span class="text-red-400/80 text-[14px] font-mono flex items-center bg-red-950/40 px-1.5 py-0.5 rounded-sm border border-red-500/20" title="해당 종목의 펀딩비 결제 남은 시간"><i class="fas fa-bomb mr-1 animate-pulse"></i><span class="indiv-funding-timer" data-next-funding="${bybitFundingTimes[engName]}">--:--:--</span></span>` : ''}
                                 ${drawdownStr}
                                 <span title="1분 단기 가속도">Vel: <span class="${velColor}">${velSign}${vel.toFixed(2)}%</span></span>
                             </div>
@@ -435,13 +507,7 @@
             document.getElementById(elementId).innerHTML = listHTML;
         }
 
-        function renderShortSniper(top20, drawdown20) {
-            const snipers = [];
-            
-            top20.forEach(t => {
-                const engName = t.market.replace('KRW-', '');
-                if(bybitListedCoins.has(engName) && (t.signed_change_rate > 0.05 || t.velocity1m > 0.5)) {
-                    snipers.push({...t, mode: 'pump'});
+        );
                 }
             });
             
@@ -453,7 +519,7 @@
             });
             
             if(snipers.length === 0) {
-                document.getElementById('short-sniper-list').innerHTML = '<div class="text-[10px] text-gray-500 text-center py-2 bg-black/30 rounded border border-gray-800">현재 확정된 숏 저격 타겟이 없습니다.</div>';
+                document.getElementById('short-sniper-list').innerHTML = '<div class="text-[14px] text-gray-500 text-center py-2 bg-black/30 rounded border border-gray-800">현재 확정된 숏 저격 타겟이 없습니다.</div>';
                 return;
             }
             
@@ -465,29 +531,82 @@
                 const isPump = t.mode === 'pump';
                 const style = isPump ? 'border-red-900/50 bg-red-900/10' : 'border-blue-900/50 bg-blue-900/10';
                 const icon = isPump ? '<i class="fas fa-arrow-up text-red-500"></i>' : '<i class="fas fa-arrow-down text-blue-500"></i>';
-                const statusStr = isPump ? `<span class="text-red-400 text-[10px] font-bold">김치광기 (숏스퀴즈 유의하여 타점 대기)</span>` : `<span class="text-blue-400 text-[10px] font-bold">설거지 시작 (숏 진입 유효)</span>`;
+                const statusStr = isPump ? `<span class="text-red-400 text-[14px] font-bold">김치광기 (숏스퀴즈 유의하여 타점 대기)</span>` : `<span class="text-blue-400 text-[14px] font-bold">설거지 시작 (숏 진입 유효)</span>`;
                 
                 return `
                     <div class="flex flex-col p-2 rounded-lg border ${style} backdrop-blur-sm relative overflow-hidden transition-all hover:border-gray-500">
                         <div class="flex justify-between items-center mb-1">
                             <div class="flex items-center gap-2">
-                                <span class="bg-blue-600/50 border border-blue-500 text-blue-100 text-[9px] px-1 rounded-sm font-bold">Bybit</span>
+                                <span class="bg-blue-600/50 border border-blue-500 text-blue-100 text-[14px] px-1 rounded-sm font-bold">Bybit</span>
                                 <span class="text-gray-100 text-sm font-bold tracking-wide">${korName}</span>
                             </div>
-                            <div class="flex gap-2 items-center text-xs font-black">
-                                ${bybitFundingTimes[engName] ? `<span class="text-red-400/80 text-[9px] font-mono flex items-center bg-red-950/40 px-1 rounded-sm border border-red-500/20"><i class="fas fa-bomb mr-1 animate-pulse"></i><span class="indiv-funding-timer" data-next-funding="${bybitFundingTimes[engName]}">--:--:--</span></span>` : ''}
+                            <div class="flex gap-2 items-center text-[14px] font-black">
+                                ${bybitFundingTimes[engName] ? `<span class="text-red-400/80 text-[14px] font-mono flex items-center bg-red-950/40 px-1 rounded-sm border border-red-500/20"><i class="fas fa-bomb mr-1 animate-pulse"></i><span class="indiv-funding-timer" data-next-funding="${bybitFundingTimes[engName]}">--:--:--</span></span>` : ''}
                                 <div>${icon} <span class="${isPump ? 'text-red-400' : 'text-blue-400'}">${chg > 0 ? '+' : ''}${chg}%</span></div>
                             </div>
                         </div>
                         <div class="flex justify-between items-center mt-1">
                             ${statusStr}
-                            <span class="text-gray-400 text-[10px] font-mono">Peak: ${t.drawdown.toFixed(1)}%</span>
+                            <span class="text-gray-400 text-[14px] font-mono">Peak: ${t.drawdown.toFixed(1)}%</span>
                         </div>
                     </div>
                 `;
             }).join('');
             
             document.getElementById('short-sniper-list').innerHTML = html;
+        }
+
+        function renderMorningWhales(dataArr) {
+            if(morningWhales.length === 0) return;
+            
+            const tickerMap = {};
+            dataArr.forEach(t => tickerMap[t.market] = t);
+            
+            const html = morningWhales.map((w, index) => {
+                const t = tickerMap[w.market];
+                if(!t) return '';
+                
+                const currPrice = parseFloat(t.trade_price);
+                const highPrice = parseFloat(w.high_price);
+                const drawdown = highPrice > 0 ? ((currPrice - highPrice) / highPrice) * 100 : 0;
+                const volEok = Math.floor(w.volume / 100000000).toLocaleString();
+                const engName = w.market.replace('KRW-', '');
+                
+                const isSurviving = drawdown >= 0;
+                const bgClass = isSurviving ? 'bg-green-900/10 border-green-500/40 shadow-[0_0_10px_rgba(34,197,94,0.1)]' : 'bg-red-900/10 border-red-500/20';
+                const signalText = isSurviving ? '<span class="text-green-400 font-bold"><i class="fas fa-rocket mr-1"></i>진성 돌파 (롱)</span>' : '<span class="text-red-400 font-bold"><i class="fas fa-meteor mr-1"></i>고점 이탈 (숏)</span>';
+                const drawColor = isSurviving ? 'text-green-400' : 'text-red-400';
+                const drawSign = drawdown > 0 ? '+' : '';
+                
+                return `
+                    <div class="flex flex-col ${bgClass} border p-2.5 rounded-lg transition-all mb-2 relative overflow-hidden">
+                        ${!isSurviving ? '<div class="absolute inset-0 bg-red-900/10 animate-pulse pointer-events-none"></div>' : ''}
+                        <div class="flex justify-between items-center mb-1.5 relative z-10">
+                            <div class="flex items-center gap-2">
+                                <span class="bg-amber-500 text-black px-1.5 rounded-sm font-mono text-[10px] font-black">${index + 1}</span>
+                                <div class="font-bold text-gray-100 text-[14px] flex items-baseline gap-1">${w.name} 
+                                    <span class="text-[11px] text-gray-500 font-normal">${engName}</span>
+                                </div>
+                            </div>
+                            <div class="text-[11px] font-mono text-gray-300 bg-black/40 px-1.5 py-0.5 rounded border border-gray-700">대금: ${volEok}억</div>
+                        </div>
+                        <div class="flex justify-between items-center text-[12px] font-bold font-mono text-gray-400 pl-7 relative z-10">
+                            <div>09시 고점: <span class="text-gray-300">${highPrice.toLocaleString()}</span>원</div>
+                        </div>
+                        <div class="flex justify-between items-center pl-7 mt-1.5 relative z-10">
+                            <div class="flex items-center gap-2">
+                                ${bybitListedCoins.has(engName) ? '<span class="text-blue-400 bg-blue-900/30 px-1 py-0.5 rounded border border-blue-500/30 text-[9px] font-bold">Bybit</span>' : ''}
+                                ${bybitFundingTimes[engName] ? `<span class="text-red-400/80 text-[9px] font-mono flex items-center bg-red-950/40 px-1 py-0.5 rounded-sm border border-red-500/20"><i class="fas fa-bomb mr-1 animate-pulse"></i><span class="indiv-funding-timer" data-next-funding="${bybitFundingTimes[engName]}">--:--:--</span></span>` : ''}
+                            </div>
+                            <div class="text-[12px] font-black flex gap-2 items-center tracking-tight">
+                                ${signalText} <span class="${drawColor}">${drawSign}${drawdown.toFixed(1)}%</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('morning-whales-list').innerHTML = html;
         }
 
         function buildAlertMessage(mode, items) {
@@ -605,9 +724,9 @@
             };
             
             const badges = {
-                'red': '<span class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded shadow-lg shadow-red-500/30"><i class="fas fa-meteor mr-1"></i> 낙주(기술적반등) 승인</span>',
-                'green': '<span class="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded shadow-lg shadow-green-500/30"><i class="fas fa-rocket mr-1"></i> 상승 돌파 승인</span>',
-                'yellow': '<span class="bg-yellow-500 text-black text-xs font-bold px-2 py-1 rounded shadow-lg shadow-yellow-500/30"><i class="fas fa-eye mr-1"></i> 관망</span>'
+                'red': '<span class="bg-red-500 text-white text-[14px] font-bold px-2 py-1 rounded shadow-lg shadow-red-500/30"><i class="fas fa-meteor mr-1"></i> 낙주(기술적반등) 승인</span>',
+                'green': '<span class="bg-green-500 text-white text-[14px] font-bold px-2 py-1 rounded shadow-lg shadow-green-500/30"><i class="fas fa-rocket mr-1"></i> 상승 돌파 승인</span>',
+                'yellow': '<span class="bg-yellow-500 text-black text-[14px] font-bold px-2 py-1 rounded shadow-lg shadow-yellow-500/30"><i class="fas fa-eye mr-1"></i> 관망</span>'
             };
             
             const html = verdicts.map(v => {
