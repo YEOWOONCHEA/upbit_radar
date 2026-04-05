@@ -7,8 +7,18 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #131314; color: #cbd5e1; font-family: 'Inter', sans-serif; }
-        .glass { background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(10px); border: 1px solid #2a2d3e; }
+        body { 
+            background: radial-gradient(circle at 10% 10%, #0d1426 0%, #05070a 100%); 
+            color: #cbd5e1; 
+            font-family: 'Inter', sans-serif; 
+            min-height: 100vh;
+        }
+        .glass { 
+            background: rgba(15, 25, 45, 0.55); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid #1e2c4f; 
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
         .gainer-bg { background: linear-gradient(90deg, rgba(16, 185, 129, 0.1) 0%, transparent 100%); }
         .loser-bg { background: linear-gradient(90deg, rgba(239, 68, 68, 0.1) 0%, transparent 100%); }
         @keyframes neonPulseGainer { 0% { box-shadow: inset 0 0 0px rgba(16,185,129,0); } 50% { box-shadow: inset 0 0 15px rgba(16,185,129,0.5); border-color: rgba(16,185,129,0.8); } 100% { box-shadow: inset 0 0 0px rgba(16,185,129,0); } }
@@ -22,10 +32,17 @@
     </style>
 </head>
 <body class="p-4 lg:p-8">
-    <h1 class="text-3xl font-extrabold text-[#f59e0b] mb-2"><i class="fas fa-satellite-dish"></i> 1004MAS UPBIT RADAR <span class="text-xs text-gray-500 font-normal ml-2 tracking-widest border border-gray-700 px-2 rounded">v2.0 TACTICAL (KRW)</span></h1>
-    <p class="text-gray-400 mb-6 flex justify-between items-center flex-wrap gap-2">
-        <span>한국 가상자산 현물(KRW) 자금 쏠림 감시 및 투매(낙주) 자동 경보 시스템</span>
-    </p>
+    <div class="flex justify-between items-start mb-6 w-full">
+        <div>
+            <h1 class="text-3xl font-extrabold text-blue-500 mb-2 drop-shadow-md"><i class="fas fa-satellite-dish"></i> 1004MAS UPBIT RADAR <span class="text-xs text-blue-300 font-normal ml-2 tracking-widest border border-blue-800 bg-blue-900/30 px-2 rounded">v2.0 TACTICAL (KRW)</span></h1>
+            <p class="text-gray-400">
+                <span>한국 가상자산 현물(KRW) 자금 쏠림 감시 및 투매(낙주) 자동 경보 시스템</span>
+            </p>
+        </div>
+        <div id="live-clock" class="text-2xl font-mono font-black text-blue-400 bg-black/60 px-5 py-2 rounded-xl border border-blue-900/50 shadow-[0_0_15px_rgba(59,130,246,0.2)] flex items-center tracking-wider">
+            --:--:--
+        </div>
+    </div>
     
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
@@ -33,8 +50,8 @@
         <div class="lg:col-span-4 glass p-4 rounded-xl relative overflow-hidden shadow-lg shadow-green-900/10 flex flex-col h-[calc(100vh-120px)]">
             <h2 class="text-lg flex justify-between items-center font-bold text-white mb-4 border-b border-gray-800 pb-2">
                 <span><i class="fas fa-rocket text-green-500 mr-2"></i> 진성 펌핑: 자금 쏠림 (Top 20)</span>
-                <span class="text-green-400 font-mono text-xs bg-green-900/40 px-2 py-0.5 rounded border border-green-500/30" title="업비트 기준 매일 09:00 KST에 전일 대비 수익률 0% 리셋">
-                    <i class="fas fa-clock mr-1"></i> 오전 9시 기준
+                <span class="text-green-400 font-mono text-xs bg-green-900/40 px-2 py-0.5 rounded border border-green-500/30" title="업비트 기준 매일 09:00 KST에 전일 대비 수익률 0% 리셋 (경주마 펌핑 시간)">
+                    <i class="fas fa-flag-checkered mr-1 animate-ping"></i> 리셋 펌핑 <strong class="upbit-reset-countdown tracking-widest ml-1">--:--:--</strong>
                 </span>
             </h2>
             <div id="top-gainers-list" class="space-y-2 overflow-y-auto flex-grow custom-scrollbar">
@@ -46,6 +63,9 @@
         <div class="lg:col-span-4 glass p-4 rounded-xl relative overflow-hidden shadow-lg shadow-red-900/10 flex flex-col h-[calc(100vh-120px)]">
             <h2 class="text-lg flex justify-between items-center font-bold text-white mb-4 border-b border-gray-800 pb-2">
                 <span><i class="fas fa-arrow-down text-red-500 mr-2"></i> 기술적 반등 타겟: 투매 과대낙폭 (Drawdown 20)</span>
+                <span class="text-red-400 font-mono text-xs bg-red-900/40 px-2 py-0.5 rounded border border-red-500/30" title="업비트 기준 매일 09:00 KST에 전일 대비 수익률 0% 리셋 (경주마 펌핑 시간)">
+                    <i class="fas fa-flag-checkered mr-1 animate-ping"></i> 리셋 펌핑 <strong class="upbit-reset-countdown tracking-widest ml-1">--:--:--</strong>
+                </span>
             </h2>
             <div id="top-losers-list" class="space-y-2 overflow-y-auto flex-grow custom-scrollbar">
                 <div class="text-gray-400 text-sm"><i class="fas fa-spinner fa-spin mr-2"></i>업비트 위성 연결 중...</div>
@@ -523,6 +543,7 @@
                     }
 
                     verdicts.push({
+                        raw_id: t.market,
                         coin_name: korName,
                         signal: 'green',
                         reason: `🔥 <b>돈(거래대금 ${Math.floor(turnover).toLocaleString()}억)</b>이 강하게 쏠리며 <b>가속도(+${vel.toFixed(2)}%)</b>가 폭발 중입니다.\n현재 <b>고점 방어력(${dd.toFixed(2)}%)</b>이 매우 뛰어난 상태로, 윗꼬리 없이 세력이 계속 시세를 펌핑하는 '황금 상승장(돌파)'일 확률이 매우 높습니다.`
@@ -546,11 +567,19 @@
                     }
 
                     verdicts.push({
+                        raw_id: t.market,
                         coin_name: korName,
                         signal: 'red',
                         reason: `💀 <b>고점 대비 폭락(${dd.toFixed(2)}%)</b>하며 개미들의 패닉물량이 던져지는 <b>'투매 극공포 구간'</b>입니다.\n순간적인 하락 가속도(${vel.toFixed(2)}%)가 심하게 고꾸라지고 있습니다.\n현물 시장에서 이런 투매의 끝자락은 대개 <b>빠른 '기술적 반등(V자)'</b>이 나오므로 반등을 노리는 '낙주 매매(바닥 잡기)' 타점으로 유효합니다.`
                     });
                 }
+            });
+
+            // 최신 타점이 위로 올라오도록 가장 최근 알람 발생 순으로 정렬
+            verdicts.sort((a, b) => {
+                const ta = newVerdictTracker[a.raw_id] || 0;
+                const tb = newVerdictTracker[b.raw_id] || 0;
+                return tb - ta;
             });
 
             if (verdicts.length === 0) {
@@ -591,6 +620,39 @@
         }
 
         // Start Upbit Engine
+        
+        function updateLiveClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('ko-KR', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            document.getElementById('live-clock').innerText = timeString;
+        }
+        setInterval(updateLiveClock, 1000);
+        updateLiveClock();
+
+        function updateUpbitCountdown() {
+            const now = new Date();
+            const target = new Date();
+            target.setHours(9, 0, 0, 0);
+            if (now.getHours() >= 9) {
+                target.setDate(target.getDate() + 1);
+            }
+            const diff = target - now;
+            let h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            let m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            let s = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            h = String(h).padStart(2, '0');
+            m = String(m).padStart(2, '0');
+            s = String(s).padStart(2, '0');
+            const timeStr = `${h}:${m}:${s}`;
+            
+            document.querySelectorAll('.upbit-reset-countdown').forEach(el => {
+                el.innerText = timeStr;
+            });
+        }
+        setInterval(updateUpbitCountdown, 1000);
+        updateUpbitCountdown();
+        
         initUpbitEngine();
     </script>
 </body>
