@@ -322,6 +322,9 @@
         
         async function fetchMorningWhales() {
             try {
+                // 초기 로딩 시 fetchUpbitData()와의 API 동시 호출 충돌(Rate Limit/CORS 타임아웃)을 방지하기 위해 1.5초 대기
+                await new Promise(r => setTimeout(r, 1500));
+                
                 const now = new Date();
                 const today = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
                 const targetTime = `${today}T00:30:00`;
@@ -344,8 +347,9 @@
                 for(let i=0; i<targetCodes.length; i++) {
                     const market = targetCodes[i];
                     try {
-                        const res = await fetch(`https://api.upbit.com/v1/candles/minutes/30?market=${market}&to=${encodeURIComponent(targetTime)}&count=1`);
-                        const [candle] = await res.json();
+                        const res = await fetch(`https://api.upbit.com/v1/candles/minutes/30?market=${market}&to=${targetTime}&count=1`);
+                        const json = await res.json();
+                        const candle = Array.isArray(json) ? json[0] : null;
                         if(candle && candle.candle_date_time_kst === targetMatchTime) {
                             volData.push({
                                 market: market,
