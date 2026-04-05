@@ -324,7 +324,7 @@
             try {
                 const now = new Date();
                 const today = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-                const targetTime = `${today}T09:30:00+09:00`;
+                const targetTime = `${today}T00:30:00`;
                 const targetMatchTime = `${today}T09:00:00`;
                 
                 // 1. 거래대금 상위 종목 선별 (API 호출 최소화)
@@ -518,54 +518,7 @@
             document.getElementById(elementId).innerHTML = listHTML;
         }
 
-        );
-                }
-            });
-            
-            drawdown20.forEach(t => {
-                const engName = t.market.replace('KRW-', '');
-                if(bybitListedCoins.has(engName) && t.drawdown < -5 && !snipers.find(s => s.market === t.market)) {
-                    snipers.push({...t, mode: 'dump'});
-                }
-            });
-            
-            if(snipers.length === 0) {
-                document.getElementById('short-sniper-list').innerHTML = '<div class="text-[14px] text-gray-500 text-center py-2 bg-black/30 rounded border border-gray-800">현재 확정된 숏 저격 타겟이 없습니다.</div>';
-                return;
-            }
-            
-            const html = snipers.slice(0, 4).map(t => {
-                const korName = krwMarketNames[t.market];
-                const engName = t.market.replace('KRW-', '');
-                const chg = (t.signed_change_rate * 100).toFixed(2);
-                
-                const isPump = t.mode === 'pump';
-                const style = isPump ? 'border-red-900/50 bg-red-900/10' : 'border-blue-900/50 bg-blue-900/10';
-                const icon = isPump ? '<i class="fas fa-arrow-up text-red-500"></i>' : '<i class="fas fa-arrow-down text-blue-500"></i>';
-                const statusStr = isPump ? `<span class="text-red-400 text-[14px] font-bold">김치광기 (숏스퀴즈 유의하여 타점 대기)</span>` : `<span class="text-blue-400 text-[14px] font-bold">설거지 시작 (숏 진입 유효)</span>`;
-                
-                return `
-                    <div class="flex flex-col p-2 rounded-lg border ${style} backdrop-blur-sm relative overflow-hidden transition-all hover:border-gray-500">
-                        <div class="flex justify-between items-center mb-1">
-                            <div class="flex items-center gap-2">
-                                <span class="bg-blue-600/50 border border-blue-500 text-blue-100 text-[14px] px-1 rounded-sm font-bold">Bybit</span>
-                                <span class="text-gray-100 text-sm font-bold tracking-wide">${korName}</span>
-                            </div>
-                            <div class="flex gap-2 items-center text-[14px] font-black">
-                                ${bybitFundingTimes[engName] ? `<span class="text-red-400/80 text-[14px] font-mono flex items-center bg-red-950/40 px-1 rounded-sm border border-red-500/20"><i class="fas fa-bomb mr-1 animate-pulse"></i><span class="indiv-funding-timer" data-next-funding="${bybitFundingTimes[engName]}">--:--:--</span></span>` : ''}
-                                <div>${icon} <span class="${isPump ? 'text-red-400' : 'text-blue-400'}">${chg > 0 ? '+' : ''}${chg}%</span></div>
-                            </div>
-                        </div>
-                        <div class="flex justify-between items-center mt-1">
-                            ${statusStr}
-                            <span class="text-gray-400 text-[14px] font-mono">Peak: ${t.drawdown.toFixed(1)}%</span>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            
-            document.getElementById('short-sniper-list').innerHTML = html;
-        }
+
 
         function renderMorningWhales(dataArr) {
             if(morningWhales.length === 0) return;
