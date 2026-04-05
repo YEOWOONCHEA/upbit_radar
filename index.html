@@ -121,7 +121,9 @@
     <script>
         let krwMarketCodes = [];
         let krwMarketNames = {};
+        let upbitListedCoins = new Set();
         let bybitListedCoins = new Set();
+        let bybitFundingTimes = {};
 
         let previousGainers = new Set();
         let previousLosers = new Set();
@@ -256,14 +258,17 @@
 
         async function initUpbitEngine() {
             try {
-                // 바이비트 선물 상장 리스트 먼저 획득 (크로스 체킹 용도)
-                try {
-                    const byRes = await fetch('https://api.bybit.com/v5/market/tickers?category=linear');
-                    const byData = await byRes.json();
-                    byData.result.list.forEach(t => {
-                        bybitListedCoins.add(t.symbol.replace('USDT', ''));
-                    });
-                } catch(e) { console.error("Bybit Sync Error:", e); }
+                // 바이비트 선물 상장 리스트(크로스 체킹 용도)를 메인 스레드 대기 없이 백그라운드로 가져옴 (로딩 병목 해소)
+                fetch('https://api.bybit.com/v5/market/tickers?category=linear')
+                    .then(r => r.json())
+                    .then(d => {
+                        d.result.list.forEach(t => {
+                            const sym = t.symbol.replace('USDT', '');
+                            bybitListedCoins.add(sym);
+                            if(t.nextFundingTime) bybitFundingTimes[sym] = parseInt(t.nextFundingTime);
+                        });
+                    })
+                    .catch(e => console.error("Bybit Sync Error:", e));
 
                 const res = await fetch('https://api.upbit.com/v1/market/all');
                 const markets = await res.json();
@@ -351,6 +356,7 @@
                             <div class="text-gray-400">${turnoverEok}억원</div>
                             <div class="flex gap-4 items-center">
                                 ${bybitListedCoins.has(engName) ? '<span class="text-blue-400 bg-blue-900/30 px-1.5 py-0.5 rounded border border-blue-500/30 text-[10px] font-bold" title="바이비트 선물 상장 여부">Bybit</span>' : ''}
+                                ${bybitFundingTimes[engName] ? `<span class="text-red-400/80 text-[10px] font-mono flex items-center bg-red-950/40 px-1.5 py-0.5 rounded-sm border border-red-500/20" title="해당 종목의 펀딩비 결제 남은 시간"><i class="fas fa-bomb mr-1 animate-pulse"></i><span class="indiv-funding-timer" data-next-funding="${bybitFundingTimes[engName]}">--:--:--</span></span>` : ''}
                                 ${t.drawdown >= -3 
                                     ? `<span title="고점 유지력(초강세)"><i class="fas fa-fire text-blue-400 mr-1 text-sm"></i>Peak: <span class="text-blue-400 font-bold">${t.drawdown.toFixed(1)}%</span></span>`
                                     : (t.drawdown >= -10 
@@ -418,6 +424,7 @@
                             <div class="text-gray-300">${turnoverEok}억원</div>
                             <div class="flex gap-4 items-center">
                                 ${bybitListedCoins.has(engName) ? '<span class="text-blue-400 bg-blue-900/30 px-1.5 py-0.5 rounded border border-blue-500/30 text-[10px] font-bold" title="바이비트 선물 상장 여부">Bybit</span>' : ''}
+                                ${bybitFundingTimes[engName] ? `<span class="text-red-400/80 text-[10px] font-mono flex items-center bg-red-950/40 px-1.5 py-0.5 rounded-sm border border-red-500/20" title="해당 종목의 펀딩비 결제 남은 시간"><i class="fas fa-bomb mr-1 animate-pulse"></i><span class="indiv-funding-timer" data-next-funding="${bybitFundingTimes[engName]}">--:--:--</span></span>` : ''}
                                 ${drawdownStr}
                                 <span title="1분 단기 가속도">Vel: <span class="${velColor}">${velSign}${vel.toFixed(2)}%</span></span>
                             </div>
@@ -467,8 +474,9 @@
                                 <span class="bg-blue-600/50 border border-blue-500 text-blue-100 text-[9px] px-1 rounded-sm font-bold">Bybit</span>
                                 <span class="text-gray-100 text-sm font-bold tracking-wide">${korName}</span>
                             </div>
-                            <div class="flex gap-1 items-center text-xs font-black">
-                                ${icon} <span class="${isPump ? 'text-red-400' : 'text-blue-400'}">${chg > 0 ? '+' : ''}${chg}%</span>
+                            <div class="flex gap-2 items-center text-xs font-black">
+                                ${bybitFundingTimes[engName] ? `<span class="text-red-400/80 text-[9px] font-mono flex items-center bg-red-950/40 px-1 rounded-sm border border-red-500/20"><i class="fas fa-bomb mr-1 animate-pulse"></i><span class="indiv-funding-timer" data-next-funding="${bybitFundingTimes[engName]}">--:--:--</span></span>` : ''}
+                                <div>${icon} <span class="${isPump ? 'text-red-400' : 'text-blue-400'}">${chg > 0 ? '+' : ''}${chg}%</span></div>
                             </div>
                         </div>
                         <div class="flex justify-between items-center mt-1">
@@ -648,6 +656,21 @@
             
             document.querySelectorAll('.upbit-reset-countdown').forEach(el => {
                 el.innerText = timeStr;
+            });
+            
+            // 전역 Funding Timer 업데이트 공유
+            document.querySelectorAll('.indiv-funding-timer').forEach(el => {
+                const fundingTime = parseInt(el.getAttribute('data-next-funding'));
+                if (!fundingTime) return;
+                const fDiff = fundingTime - Date.now();
+                if (fDiff <= 0) {
+                    el.innerText = "00:00:00";
+                    return;
+                }
+                let fh = Math.floor((fDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                let fm = Math.floor((fDiff % (1000 * 60 * 60)) / (1000 * 60));
+                let fs = Math.floor((fDiff % (1000 * 60)) / 1000);
+                el.innerText = `${String(fh).padStart(2, '0')}:${String(fm).padStart(2, '0')}:${String(fs).padStart(2, '0')}`;
             });
         }
         setInterval(updateUpbitCountdown, 1000);
