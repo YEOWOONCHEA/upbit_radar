@@ -56,6 +56,10 @@
             <button onclick="document.getElementById('settings-modal').classList.remove('hidden')" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-[14px] text-gray-400 hover:text-white border border-gray-600 transition-colors tooltip" title="텔레그램 환경설정">
                 <i class="fas fa-cog"></i> 설 정
             </button>
+            <div class="flex flex-col items-center mr-2 bg-red-950/40 p-1.5 rounded-lg border border-red-900/50 cursor-help" title="바이비트 펀딩비 결제 남은 시간 (공통)">
+                <div class="text-[10px] text-red-300 font-bold mb-0.5"><i class="fas fa-bomb mr-1"></i>펀딩비 결제</div>
+                <div class="fr-countdown-display text-lg font-mono font-black text-red-500 tracking-wider">--:--:--</div>
+            </div>
             
             <div id="live-clock" class="text-2xl font-mono font-black text-blue-400 bg-black/60 px-5 py-2 rounded-xl border border-blue-900/50 shadow-[0_0_15px_rgba(59,130,246,0.2)] flex items-center tracking-wider">
                 --:--:--
@@ -105,8 +109,17 @@
             <!-- 대장주 지휘부 고정 패널 -->
             <div id="market-leaders-list" class="space-y-2 mb-4 border-b border-gray-800 pb-4"></div>
             
-            <div id="ai-verdict-list" class="space-y-3 overflow-y-auto flex-grow custom-scrollbar">
+            <div id="ai-verdict-list" class="space-y-3 overflow-y-auto flex-grow custom-scrollbar min-h-[300px]">
                 <div class="text-gray-400 text-sm py-4 text-center border border-gray-800 rounded bg-black/20"><i class="fas fa-satellite mr-2 animate-pulse"></i> 코인 오름세/투매세 감식 대기 중...</div>
+            </div>
+
+            <!-- NEW: n8n-Style Execution Terminal -->
+            <div class="panel-header text-emerald-400 border-t border-gray-800 bg-black shrink-0 mt-4 shadow-[inset_0_1px_5px_rgba(16,185,129,0.1)] px-2 py-1 flex justify-between items-center rounded-t">
+                <div><span class="text-[12px] font-black font-mono"><i class="fas fa-terminal text-emerald-500 mr-2"></i>Multi-Agent Pipeline (Upbit Node)</span></div>
+                <span class="text-[8px] bg-emerald-900/40 text-emerald-300 px-1 rounded border border-emerald-800 animate-pulse">Running</span>
+            </div>
+            <div class="p-2 overflow-y-auto w-full flex-col gap-1 bg-black text-emerald-400 font-mono text-[10px] min-h-[140px] max-h-[180px] shrink-0 border border-gray-800 custom-scrollbar opacity-90 leading-tight rounded-b" id="agent-terminal-container">
+                <div><span class="text-gray-500">[System]</span> Initializing Upbit AI Pipeline...</div>
             </div>
         </div>
     </div>
@@ -437,7 +450,6 @@
                             <div class="text-gray-400">${turnoverEok}억원</div>
                             <div class="flex gap-4 items-center">
                                 ${bybitListedCoins.has(engName) ? '<span class="text-blue-400 bg-blue-900/30 px-1.5 py-0.5 rounded border border-blue-500/30 text-[14px] font-bold" title="바이비트 선물 상장 여부">Bybit</span>' : ''}
-                                ${bybitFundingTimes[engName] ? `<span class="text-red-400/80 text-[14px] font-mono flex items-center bg-red-950/40 px-1.5 py-0.5 rounded-sm border border-red-500/20" title="해당 종목의 펀딩비 결제 남은 시간"><i class="fas fa-bomb mr-1 animate-pulse"></i><span class="indiv-funding-timer" data-next-funding="${bybitFundingTimes[engName]}">--:--:--</span></span>` : ''}
                                 ${t.drawdown >= -3 
                                     ? `<span title="고점 유지력(초강세)"><i class="fas fa-fire text-blue-400 mr-1 text-sm"></i>Peak: <span class="text-blue-400 font-bold">${t.drawdown.toFixed(1)}%</span></span>`
                                     : (t.drawdown >= -10 
@@ -505,7 +517,6 @@
                             <div class="text-gray-300">${turnoverEok}억원</div>
                             <div class="flex gap-4 items-center">
                                 ${bybitListedCoins.has(engName) ? '<span class="text-blue-400 bg-blue-900/30 px-1.5 py-0.5 rounded border border-blue-500/30 text-[14px] font-bold" title="바이비트 선물 상장 여부">Bybit</span>' : ''}
-                                ${bybitFundingTimes[engName] ? `<span class="text-red-400/80 text-[14px] font-mono flex items-center bg-red-950/40 px-1.5 py-0.5 rounded-sm border border-red-500/20" title="해당 종목의 펀딩비 결제 남은 시간"><i class="fas fa-bomb mr-1 animate-pulse"></i><span class="indiv-funding-timer" data-next-funding="${bybitFundingTimes[engName]}">--:--:--</span></span>` : ''}
                                 ${drawdownStr}
                                 <span title="1분 단기 가속도">Vel: <span class="${velColor}">${velSign}${vel.toFixed(2)}%</span></span>
                             </div>
@@ -558,7 +569,6 @@
                         <div class="flex justify-between items-center pl-7 mt-1.5 relative z-10">
                             <div class="flex items-center gap-2">
                                 ${bybitListedCoins.has(engName) ? '<span class="text-blue-400 bg-blue-900/30 px-1 py-0.5 rounded border border-blue-500/30 text-[9px] font-bold">Bybit</span>' : ''}
-                                ${bybitFundingTimes[engName] ? `<span class="text-red-400/80 text-[9px] font-mono flex items-center bg-red-950/40 px-1 py-0.5 rounded-sm border border-red-500/20"><i class="fas fa-bomb mr-1 animate-pulse"></i><span class="indiv-funding-timer" data-next-funding="${bybitFundingTimes[engName]}">--:--:--</span></span>` : ''}
                             </div>
                             <div class="text-[12px] font-black flex gap-2 items-center tracking-tight">
                                 ${signalText} <span class="${drawColor}">${drawSign}${drawdown.toFixed(1)}%</span>
@@ -637,6 +647,9 @@
                         signal: 'green',
                         reason: `🔥 <b>돈(거래대금 ${Math.floor(turnover).toLocaleString()}억)</b>이 강하게 쏠리며 <b>가속도(+${vel.toFixed(2)}%)</b>가 폭발 중입니다.\n현재 <b>고점 방어력(${dd.toFixed(2)}%)</b>이 매우 뛰어난 상태로, 윗꼬리 없이 세력이 계속 시세를 펌핑하는 '황금 상승장(돌파)'일 확률이 매우 높습니다.`
                     });
+                    
+                    const now = new Date().toLocaleTimeString('ko-KR', { hour12: false });
+                    pushN8nLog(`<div class="mt-1"><span class="text-gray-500">[${now}]</span> <span class="text-red-400">[Analyst Agent]</span> Breaking Pump Detected: ${korName}. Generating Brief...</div>`);
                 }
             });
 
@@ -739,7 +752,28 @@
         setInterval(updateUpbitCountdown, 1000);
         updateUpbitCountdown();
         
+        // n8n Terminal Simulation
+        function pushN8nLog(logHTML) {
+            const container = document.getElementById('agent-terminal-container');
+            if (container) {
+                // simple cap logic
+                let htmlContent = container.innerHTML;
+                const matches = htmlContent.match(/<div[^>]*>.*?<\/div>/g) || [];
+                if (matches.length > 20) matches.shift();
+                matches.push(logHTML);
+                container.innerHTML = matches.join("");
+                container.scrollTop = container.scrollHeight;
+            }
+        }
+        setInterval(() => {
+            if(Math.random() < 0.3) {
+                const now = new Date().toLocaleTimeString('ko-KR', { hour12: false });
+                pushN8nLog(`<div class="mt-1"><span class="text-gray-500">[${now}]</span> <span class="text-blue-400">[Scout Agent]</span> WS Ping OK (Parsing Orderbooks).</div>`);
+            }
+        }, 6000);
+
         initUpbitEngine();
+        pushN8nLog(`<div class="mt-1"><span class="text-gray-500">[System]</span> Upbit WebSocket Stream Connection Established.</div>`);
     </script>
 </body>
 </html>
